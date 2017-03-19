@@ -13,7 +13,8 @@ namespace FinalProject {
         #region FIELDS
 
         private string _commonName;
-        private int _locationID; // must be a unique value for each object
+        private int _xCoord;
+        private int _yCoord;
         private string _description;
         private bool _accessable;
         private int _experiencePoints;
@@ -28,9 +29,14 @@ namespace FinalProject {
             set { _commonName = value; }
         }
 
-        public int LocationID {
-            get { return _locationID; }
-            set { _locationID = value; }
+        public int xCoord {
+            get { return _xCoord; }
+            set { _xCoord = value; }
+        }
+    
+        public int yCoord {
+            get { return _yCoord; }
+            set { _yCoord = value; }
         }
 
         public string Description {

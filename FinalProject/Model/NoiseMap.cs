@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace FinalProject {
-    class NoiseMap {
+    public class NoiseMap {
         #region ENUMERABLES
         #endregion
 
@@ -114,7 +114,6 @@ namespace FinalProject {
         #endregion
 
         #region METHODS
-
         public void Update() {
             _map = Noise.GenerateNoiseMap(_mapWidth, _mapHeight, _seed, _xZoom, _yZoom, _scale, _octaves, _persistance, _lacunarity, _offsetX, _offsetY);
         }

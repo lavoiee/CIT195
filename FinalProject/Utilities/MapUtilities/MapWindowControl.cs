@@ -7,12 +7,11 @@ using System.Threading.Tasks;
 namespace FinalProject {
     public static class MapWindowControl {
 
+        #region Fields
         private static int windowWidth;
         private static int windowHeight;
         private static int windowLeft;
         private static int windowTop;
-
-        private static int messageOffset;
 
         private static NoiseMap map;
         private static NoiseMap treeMap;
@@ -20,17 +19,45 @@ namespace FinalProject {
         private static int posX = 1300;
         private static int posY = 850;
 
-        private static int timer = 0;
-
         private static int moveSpeed = 5;
 
         private static int scale = 1600;
-        public static int xZoom = 15;
-        public static int yZoom = 15;
+        public static int xZoom = 20;
+        public static int yZoom = 20;
         public static int zoomLevels = 20;
 
         private static Random prng = new Random();
+        #endregion Fields
 
+        #region Properties
+        public static int Zoom {
+            get { return xZoom; }
+            set { xZoom = value; yZoom = value; }
+        }
+
+        public static int WindowWidth {
+            get { return windowWidth; }
+        }
+
+        public static int WindowHeight {
+            get { return windowHeight; }
+        }
+
+        public static int WindowLeft {
+            get { return windowLeft; }
+        }
+
+        public static int WindowTop {
+            get { return windowTop; }
+        }
+
+        public static NoiseMap Map {
+            get { return map; }
+        }
+
+        #endregion
+
+        #region Methods
         public static void InitializeMaps() {
             windowWidth = ConsoleLayout.MainBoxWidth - 2;
             windowHeight = ConsoleLayout.MainBoxHeight - 2;
@@ -40,8 +67,7 @@ namespace FinalProject {
             //treeMap = new NoiseMap(SCREEN_WIDTH, SCREEN_HEIGHT, 86263, scale, 8, 0.75f, 1.5f, SCREEN_WIDTH / 2 + posX, SCREEN_HEIGHT / 2 + posY);
         }
 
-
-        public static void Move(int moveX, int moveY, int zoom) {
+        public static int[] Move(int moveX, int moveY, int zoom) {
 
             if (zoom == -1) if (xZoom > 1 && yZoom > 1) { xZoom -= 1; yZoom -= 1; };
             if (zoom == 1) if (xZoom < zoomLevels && yZoom < zoomLevels) { xZoom += 1; yZoom += 1; };
@@ -53,23 +79,10 @@ namespace FinalProject {
             map.Yzoom = yZoom;
             map.OffsetX = posX;
             map.OffsetY = posY;
-        }
 
-        static void DisplayContinuePrompt() {
-            Console.CursorVisible = false;
+            int[] pos = { posX, posY };
 
-            //string contMessage = "  Press any key to continue  ";
-            //Console.SetCursorPosition(SCREEN_WIDTH / 2 - contMessage.Length / 2, SCREEN_HEIGHT / 2);
-            //Console.Write(contMessage);
-            ConsoleKeyInfo response = Console.ReadKey();
-
-            if (response.Key == ConsoleKey.A) posX -= moveSpeed * xZoom;
-            if (response.Key == ConsoleKey.D) posX += moveSpeed * xZoom;
-            if (response.Key == ConsoleKey.W) posY += moveSpeed * yZoom;
-            if (response.Key == ConsoleKey.S) posY -= moveSpeed * yZoom;
-            if (response.Key == ConsoleKey.E) if (xZoom > 1 && yZoom > 1) { xZoom -= 1; yZoom -= 1; };
-            if (response.Key == ConsoleKey.Q) if (xZoom < zoomLevels && yZoom < zoomLevels) { xZoom += 1; yZoom += 1; };
-            //Console.CursorVisible = true;
+            return pos;
         }
 
         public static void DrawScreen() {
@@ -115,10 +128,6 @@ namespace FinalProject {
                         //WriteScreen(temp, prevColor, toWrite);
                     }
                 }
-                Console.BackgroundColor = ConsoleColor.Black;
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.SetCursorPosition(windowLeft, windowTop - 2);
-                Console.Write($"Min: {minTemp}, Max: {maxTemp}");
             }
         }
 
@@ -253,5 +262,6 @@ namespace FinalProject {
         static int GetRandom(int _min, int _max) {
             return prng.Next(_min, _max);
         }
+        #endregion
     }
 }

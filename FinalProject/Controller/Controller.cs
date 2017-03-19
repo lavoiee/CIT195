@@ -17,6 +17,7 @@ namespace FinalProject {
         private World _world;
         private bool _playingGame;
         private MenuOptions _currentScreen;
+        private bool initializedMap = false;
 
         #endregion
 
@@ -45,7 +46,6 @@ namespace FinalProject {
             _player = new Player();
             _world = new World();
             _gameConsoleView = new ConsoleView(_player, _world);
-            _gameMapView = new MapView(_player, _world);
             _playingGame = true;
 
             Console.CursorVisible = false;
@@ -60,8 +60,8 @@ namespace FinalProject {
             //
             // display splash screen
             //
-            _playingGame = true;
-            //_gameConsoleView.DisplayIntroScreen();
+            //_playingGame = true;
+            _gameConsoleView.DisplayIntroScreen();
             //_gameConsoleView.DisplayAnimation();
 
 
@@ -107,7 +107,7 @@ namespace FinalProject {
             //
             // Prepare game play screen
             //
-            _gameConsoleView.DisplayGamePlayScreen("Current Location", Text.CurrentLocationInfo(_world.GetLocationByID(1)), ActiveMenu.FullMenu, "");
+            _gameConsoleView.DisplayWorldMap(true);
 
             //
             // Game loop
@@ -124,7 +124,7 @@ namespace FinalProject {
                         break;
 
                     case MenuOptions.WorldMap:
-                        _gameMapView.DisplayWorldMap();
+                        _gameConsoleView.DisplayWorldMap();
                         break;
 
                     case MenuOptions.LocalMap:
@@ -136,16 +136,18 @@ namespace FinalProject {
                         break;
 
                     case MenuOptions.Inventory:
-                        _gameConsoleView.DisplayCurrentLocationInfo();
+                        _gameConsoleView.DisplayInventory();
                         break;
 
                     case MenuOptions.Settings:
+                        _gameConsoleView.DisplayClosingScreen();
                         _playingGame = false;
                         break;
 
                     default:
                         break;
                 }
+
             }
 
             //

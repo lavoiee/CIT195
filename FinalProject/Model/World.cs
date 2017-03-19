@@ -50,34 +50,13 @@ namespace FinalProject {
 
         #region ***** define methods to return game element objects and information *****
 
-        public bool IsValidLocationID(int locationID) {
-            List<int> locationIDs = new List<int>();
-
-            //
-            // create a list of location ids
-            //
-            foreach (Location loc in _locations) {
-                locationIDs.Add(loc.LocationID);
-            }
-
-            //
-            // determine if the location id is a valid id and return the result
-            //
-            if (locationIDs.Contains(locationID)) {
-                return true;
-            } else {
-                return false;
-            }
-        }
-
-
         /// <summary>
         /// determine if a location is accessible to the player
         /// </summary>
         /// <param name="locationId"></param>
         /// <returns>accessible</returns>
-        public bool IsAccessibleLocation(int locationID) {
-            Location location = GetLocationByID(locationID);
+        public bool IsAccessibleLocation(int xCoord, int yCoord) {
+            Location location = GetLocationByCoords(xCoord,yCoord);
             if (location.Accessable == true) {
                 return true;
             } else {
@@ -86,35 +65,20 @@ namespace FinalProject {
         }
 
         /// <summary>
-        /// return the next available ID for a Location object
-        /// </summary>
-        /// <returns>next LocationObjectID </returns>
-        public int GetMaxLocationId() {
-            int MaxId = 0;
-
-            foreach (Location location in Locations) {
-                if (location.LocationID > MaxId) {
-                    MaxId = location.LocationID;
-                }
-            }
-
-            return MaxId;
-        }
-
-        /// <summary>
         /// get a Location object using an ID
         /// </summary>
         /// <param name="ID">location ID</param>
         /// <returns>requested location</returns>
-        public Location GetLocationByID(int ID) {
+        public Location GetLocationByCoords(int xCoord, int yCoord) {
             Location location = null;
 
             //
             // run through the location list and grab the correct one
             //
             foreach (Location loc in _locations) {
-                if (loc.LocationID == ID) {
-                    location = loc;
+                if (loc.xCoord == xCoord) {
+                    if (loc.yCoord == yCoord)
+                        location = loc;
                 }
             }
 
@@ -123,12 +87,21 @@ namespace FinalProject {
             // throw and exception
             //
             if (location == null) {
-                string feedbackMessage = $"The Location ID {ID} does not exist in the current world.";
-                throw new ArgumentException(ID.ToString(), feedbackMessage);
+                string feedbackMessage = $"The Location: ({xCoord},{yCoord}) does not exist in the current world.";
+                location = new Location {
+                    CommonName = "Unexplored",
+                    xCoord = xCoord,
+                    yCoord = yCoord,
+                    Description = "Looks like the programmer hasn't gotten this far",
+                    Accessable = true,
+                    ExperiencePoints = 0
+                };
+                //throw new ArgumentException($"({xCoord},{yCoord})", feedbackMessage);
             }
 
             return location;
         }
+
 
         #endregion
     }

@@ -71,18 +71,8 @@ namespace FinalProject {
         public static int FooterPositionLeft = WindowBorderSide;
         public static int FooterPositionTop = WindowHeight - 2; // 3 for the height of the footer, 1 for the window border
 
-        public static void ToggleVerticalSplit(bool toggle) {
-            if (!toggle)
-                WindowVerticalSplit = WindowWidth - WindowBorderSide;
-        }
-
         public static void ToggleVerticalSplit(int size) {
             WindowVerticalSplit = size;
-        }
-
-        public static void ToggleHorizontalSplit(bool toggle) {
-            if (!toggle)
-                WindowHorizontalSplit = WindowWidth - WindowBorderSide;
         }
 
         public static void ToggleHorizontalSplit(int size) {

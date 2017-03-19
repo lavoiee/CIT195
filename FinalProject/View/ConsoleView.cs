@@ -33,11 +33,14 @@ namespace FinalProject {
             _world = gameWorld;
 
             InitializeDisplay();
+            InitializeMap();
         }
 
         #endregion
 
-        #region METHODS
+        #region Methods
+
+        #region Window drawing
         /// <summary>
         /// Display all of the elements on the gameplay screen on the console
         /// </summary>
@@ -58,182 +61,6 @@ namespace FinalProject {
             DisplayMainBox(messageBoxHeaderText, messageBoxText);
             DisplaySideWindow(menu);
             //DisplayInputBox();
-        }
-
-        /// <summary>
-        /// Wait for any keystroke to continue
-        /// </summary>
-        public void GetContinueKey() {
-            Console.ReadKey();
-        }
-
-        /// <summary>
-        /// Get an action menu choice from the user
-        /// </summary>
-        /// <returns>action menu choice</returns>
-        public MenuOptions GetMenuChoice(Menu menu) {
-             MenuOptions chosenOption = MenuOptions.None;
-
-            //
-            // TODO validate menu choices
-            //
-            ConsoleKeyInfo keyPressedInfo = Console.ReadKey();
-            char keyPressed = keyPressedInfo.KeyChar;
-            chosenOption = menu.MenuChoices[keyPressed];
-
-            return chosenOption;
-        }
-
-        /// <summary>
-        /// get a string value from the user
-        /// </summary>
-        /// <returns>string value</returns>
-        public string GetString() {
-            return Console.ReadLine();
-        }
-
-        /// <summary>
-        /// get an integer value from the user
-        /// </summary>
-        /// <returns>integer value</returns>
-        public bool GetInteger(string prompt, int minimumValue, int maximumValue, out int integerChoice) {
-            bool validResponse = false;
-            integerChoice = 0;
-
-            DisplayInputBoxPrompt(prompt);
-            while (!validResponse) {
-                if (int.TryParse(Console.ReadLine(), out integerChoice)) {
-                    if (integerChoice >= minimumValue && integerChoice <= maximumValue) {
-                        validResponse = true;
-                    } else {
-                        ClearInputBox();
-                        DisplayInputErrorMessage($"You must enter an integer value between {minimumValue} and {maximumValue}. Please try again.");
-                        DisplayInputBoxPrompt(prompt);
-                    }
-                } else {
-                    ClearInputBox();
-                    DisplayInputErrorMessage($"You must enter an integer value between {minimumValue} and {maximumValue}. Please try again.");
-                    DisplayInputBoxPrompt(prompt);
-                }
-            }
-
-            return true;
-        }
-
-        /// <summary>
-        /// get a character species value from the user
-        /// </summary>
-        /// <returns>character species value</returns>
-        public Player.SpeciesType GetSpecies() {
-            Player.SpeciesType speciesType;
-            Enum.TryParse<Player.SpeciesType>(Console.ReadLine(), out speciesType);
-
-            return speciesType;
-        }
-
-        /// <summary>
-        /// get a character race value from the user
-        /// </summary>
-        /// <returns>character race value</returns>
-        public bool GetDouble(string prompt, double minimumValue, double maximumValue, out double doubleChoice) {
-            bool validResponse = false;
-            doubleChoice = 0;
-
-            DisplayInputBoxPrompt(prompt);
-            while (!validResponse) {
-                if (double.TryParse(Console.ReadLine(), out doubleChoice)) {
-                    if (doubleChoice >= minimumValue && doubleChoice <= maximumValue) {
-                        validResponse = true;
-                    } else {
-                        ClearInputBox();
-                        DisplayInputErrorMessage($"You must enter a value between {minimumValue} and {maximumValue}. Please try again.");
-                        DisplayInputBoxPrompt(prompt);
-                    }
-                } else {
-                    ClearInputBox();
-                    DisplayInputErrorMessage($"You must enter a value between {minimumValue} and {maximumValue}. Please try again.");
-                    DisplayInputBoxPrompt(prompt);
-                }
-            }
-
-            return true;
-        }
-
-        /// <summary>
-        /// display splash screen
-        /// </summary>
-        /// <returns>player chooses to play</returns>
-        public bool DisplayIntroScreen() {
-            bool playing = true;
-            int animationWidth = Animations.GetIntroSize()[0];
-            int animationHeight = Animations.GetIntroSize()[1];
-            int animationLength = Animations.GetIntroSize()[2];
-            int animationLeftOffset = ConsoleLayout.WindowWidth / 2 - animationWidth / 2 + 2; // The +2 is because it's off center and i don't feel like changing every frame
-            int animationTopOffset = ConsoleLayout.WindowHeight / 2 - animationHeight / 2;
-            int delay = 10;
-
-            ConsoleKeyInfo keyPressed;
-
-            Console.BackgroundColor = ConsoleTheme.SplashScreenBackgroundColor;
-            Console.ForegroundColor = ConsoleTheme.SplashScreenForegroundColor;
-            Console.Clear();
-            Console.CursorVisible = false;
-
-            int i = -6; // The -6 is because I added frames to the beginning and don't feel like renumbering everything
-            while (i < animationLength + delay) {
-                Draw(i, animationHeight, animationLeftOffset, animationTopOffset);
-                i += 1;
-                System.Threading.Thread.Sleep(64);
-            }
-
-            string message = "Press any key to continue or Esc to exit";
-            Console.SetCursorPosition(ConsoleLayout.WindowWidth / 2 - message.Length / 2 + 1, ConsoleLayout.WindowHeight * 3 / 4);
-            Console.Write(message);
-            keyPressed = Console.ReadKey();
-            if (keyPressed.Key == ConsoleKey.Escape) {
-                playing = false;
-            }
-
-            return playing;
-        }
-
-        public void DisplayAnimation() {
-            int animationWidth = Animations.GetItemPotionSize()[0];
-            int animationHeight = Animations.GetItemPotionSize()[1];
-            int animationLength = Animations.GetItemPotionSize()[2];
-            int animationLeftOffset = ConsoleLayout.WindowWidth / 2 - animationWidth / 2 + 2; // The +2 is because it's off center and i don't feel like changing every frame
-            int animationTopOffset = ConsoleLayout.WindowHeight / 2 - animationHeight / 2;
-            int delay = 10;
-
-            ConsoleKeyInfo keyPressed;
-
-            Console.BackgroundColor = ConsoleTheme.SplashScreenBackgroundColor;
-            Console.ForegroundColor = ConsoleTheme.SplashScreenForegroundColor;
-            Console.Clear();
-            Console.CursorVisible = false;
-
-            int i = 0; // The -6 is because I added frames to the beginning and don't feel like renumbering everything
-            //while (i < animationLength + delay) {
-            while(true) {
-                Draw(i, animationHeight, animationLeftOffset, animationTopOffset);
-                i += 1;
-                if (i >= animationLength)
-                    i = 0;
-                System.Threading.Thread.Sleep(128);
-            }
-
-            string message = "Press any key to continue or Esc to exit";
-            Console.SetCursorPosition(ConsoleLayout.WindowWidth / 2 - message.Length / 2 + 1, ConsoleLayout.WindowHeight * 3 / 4);
-            Console.Write(message);
-            keyPressed = Console.ReadKey();
-        }
-
-        static void Draw(int i, int height, int leftOffset, int topOffset) {
-            string[] lineToDraw = Animations.GetIntro(i);
-            for (int y = 0; y < height; y++) {
-                Console.SetCursorPosition(leftOffset, topOffset + y);
-                Console.WriteLine(lineToDraw[y]);
-            }
         }
 
         /// <summary>
@@ -264,7 +91,7 @@ namespace FinalProject {
             Console.ForegroundColor = ConsoleTheme.MenuBorderColor;
             Console.SetCursorPosition(ConsoleLayout.MenuBarPositionLeft + 2, ConsoleLayout.MenuBarPositionTop);
             //Console.Write(ConsoleWindowHelper.Center(menu.MenuTitle, ConsoleLayout.MenuBarWidth));
-            Console.Write(@"║".PadRight(ConsoleLayout.MenuBarWidth-2) + "║");
+            Console.Write(@"║".PadRight(ConsoleLayout.MenuBarWidth - 2) + "║");
 
             //
             // display menu choices
@@ -277,7 +104,7 @@ namespace FinalProject {
                 if (menuChoice.Value != MenuOptions.None) {
                     string formatedMenuChoice = ConsoleWindowHelper.ToLabelFormat(menuChoice.Value.ToString());
                     Console.SetCursorPosition(ConsoleLayout.MenuBarPositionLeft + i, ConsoleLayout.MenuBarPositionTop);
-                    i += (ConsoleLayout.MenuBarWidth-4)/5;
+                    i += (ConsoleLayout.MenuBarWidth - 4) / 5;
                     Console.Write($"|║  ({menuChoice.Key}) {formatedMenuChoice}  ║|");
                 }
             }
@@ -388,11 +215,11 @@ namespace FinalProject {
                 topRow = ConsoleLayout.MainBoxPositionTop + 9;
                 foreach (KeyValuePair<int, string> menuChoice in menu.InteractiveMenuChoices) {
                     string indicator = "   ";
-                    if (menuChoice.Key == currentSelection) 
+                    if (menuChoice.Key == currentSelection)
                         indicator = " - ";
                     string formatedMenuChoice = indicator + ConsoleWindowHelper.ToLabelFormat(menuChoice.Value) + indicator;
-                    Console.SetCursorPosition(ConsoleLayout.MainBoxPositionLeft + ConsoleLayout.MainBoxWidth/2 - 19, topRow+=2);
-                    Console.Write($"{formatedMenuChoice}".PadRight(30) + $"< {info[menuChoice.Key-1]} > ");
+                    Console.SetCursorPosition(ConsoleLayout.MainBoxPositionLeft + ConsoleLayout.MainBoxWidth / 2 - 19, topRow += 2);
+                    Console.Write($"{formatedMenuChoice}".PadRight(30) + $"< {info[menuChoice.Key - 1]} > ");
                 }
 
                 Console.SetCursorPosition(ConsoleLayout.MainBoxPositionLeft + ConsoleLayout.MainBoxWidth / 2 - 10, topRow += 4);
@@ -479,6 +306,265 @@ namespace FinalProject {
             Console.ForegroundColor = ConsoleTheme.InputBoxForegroundColor;
         }
 
+
+        #endregion
+
+        #region Map drawing
+
+        public void InitializeMap() {
+            MapWindowControl.InitializeMaps();
+        }
+
+        public void DisplayWorldMap() {
+            DisplayWorldMap(false);
+        }
+
+        public void DisplayWorldMap(bool zooming) {
+            bool drawing = true;
+            DisplayGamePlayScreen("World Map", "", ActiveMenu.FullMenu, "");
+            MapWindowControl.Move(0, 0, 0);
+            MapWindowControl.DrawScreen();
+            if (zooming) {
+                System.Threading.Thread.Sleep(1000);
+                int zoom = MapWindowControl.zoomLevels;
+                MapWindowControl.Zoom = zoom;
+                while (zoom > 0) {
+                    MapWindowControl.Move(0, 0, -1);
+                    MapWindowControl.DrawScreen();
+                    zoom -= 1;
+                }
+            }
+            while (drawing) {
+                drawing = MovePlayer();
+                MapWindowControl.DrawScreen();
+                // Draw Player
+                Console.BackgroundColor = ConsoleColor.White;
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.SetCursorPosition(MapWindowControl.WindowLeft + MapWindowControl.WindowWidth/2, MapWindowControl.WindowTop + MapWindowControl.WindowHeight/2);
+                Console.Write("ጰ");
+                Console.SetCursorPosition(0, 0);
+                Console.BackgroundColor = ConsoleColor.Black;
+                Console.ForegroundColor = ConsoleColor.Black;
+            }
+        }
+
+        public bool MovePlayer() {
+            ConsoleKeyInfo response = Console.ReadKey();
+
+            int moveX = 0;
+            int moveY = 0;
+            int zoom = 0;
+
+            //if (response.KeyChar == '1') return false;
+            if (response.KeyChar == '2') return false;
+            if (response.KeyChar == '3') return false;
+            if (response.KeyChar == '4') return false;
+            if (response.KeyChar == '5') return false;
+            if (response.Key == ConsoleKey.A) moveX = -_player.MoveSpeed;
+            if (response.Key == ConsoleKey.D) moveX = _player.MoveSpeed;
+            if (response.Key == ConsoleKey.W) moveY = _player.MoveSpeed;
+            if (response.Key == ConsoleKey.S) moveY = -_player.MoveSpeed;
+            if (response.Key == ConsoleKey.E) zoom = -1;
+            if (response.Key == ConsoleKey.Q) zoom = 1;
+
+            int terrainType = (int)MapWindowControl.Map.Map[MapWindowControl.WindowWidth / 2 + moveX, MapWindowControl.WindowHeight / 2 - moveY];
+            if (terrainType < 5 || terrainType > 8) {
+                moveX = 0;
+                moveY = 0;
+            }
+                int[] pos = MapWindowControl.Move(moveX, moveY, zoom);
+                _player.PosX = pos[0];
+                _player.PosY = pos[1];
+
+            return true;
+        }
+
+        #endregion
+
+        #region Validation
+        /// <summary>
+        /// get a string value from the user
+        /// </summary>
+        /// <returns>string value</returns>
+        public string GetString() {
+            return Console.ReadLine();
+        }
+
+        /// <summary>
+        /// get an integer value from the user
+        /// </summary>
+        /// <returns>integer value</returns>
+        public bool GetInteger(string prompt, int minimumValue, int maximumValue, out int integerChoice) {
+            bool validResponse = false;
+            integerChoice = 0;
+
+            DisplayInputBoxPrompt(prompt);
+            while (!validResponse) {
+                if (int.TryParse(Console.ReadLine(), out integerChoice)) {
+                    if (integerChoice >= minimumValue && integerChoice <= maximumValue) {
+                        validResponse = true;
+                    } else {
+                        ClearInputBox();
+                        DisplayInputErrorMessage($"You must enter an integer value between {minimumValue} and {maximumValue}. Please try again.");
+                        DisplayInputBoxPrompt(prompt);
+                    }
+                } else {
+                    ClearInputBox();
+                    DisplayInputErrorMessage($"You must enter an integer value between {minimumValue} and {maximumValue}. Please try again.");
+                    DisplayInputBoxPrompt(prompt);
+                }
+            }
+
+            return true;
+        }
+
+        /// <summary>
+        /// get a character species value from the user
+        /// </summary>
+        /// <returns>character species value</returns>
+        public Player.SpeciesType GetSpecies() {
+            Player.SpeciesType speciesType;
+            Enum.TryParse<Player.SpeciesType>(Console.ReadLine(), out speciesType);
+
+            return speciesType;
+        }
+
+        /// <summary>
+        /// get a character race value from the user
+        /// </summary>
+        /// <returns>character race value</returns>
+        public bool GetDouble(string prompt, double minimumValue, double maximumValue, out double doubleChoice) {
+            bool validResponse = false;
+            doubleChoice = 0;
+
+            DisplayInputBoxPrompt(prompt);
+            while (!validResponse) {
+                if (double.TryParse(Console.ReadLine(), out doubleChoice)) {
+                    if (doubleChoice >= minimumValue && doubleChoice <= maximumValue) {
+                        validResponse = true;
+                    } else {
+                        ClearInputBox();
+                        DisplayInputErrorMessage($"You must enter a value between {minimumValue} and {maximumValue}. Please try again.");
+                        DisplayInputBoxPrompt(prompt);
+                    }
+                } else {
+                    ClearInputBox();
+                    DisplayInputErrorMessage($"You must enter a value between {minimumValue} and {maximumValue}. Please try again.");
+                    DisplayInputBoxPrompt(prompt);
+                }
+            }
+
+            return true;
+        }
+
+        #endregion
+
+        #region Animations
+        /// <summary>
+        /// display splash screen
+        /// </summary>
+        /// <returns>player chooses to play</returns>
+        public bool DisplayIntroScreen() {
+            bool playing = true;
+            int animationWidth = Animations.GetIntroSize()[0];
+            int animationHeight = Animations.GetIntroSize()[1];
+            int animationLength = Animations.GetIntroSize()[2];
+            int animationLeftOffset = ConsoleLayout.WindowWidth / 2 - animationWidth / 2 + 2; // The +2 is because it's off center and i don't feel like changing every frame
+            int animationTopOffset = ConsoleLayout.WindowHeight / 2 - animationHeight / 2;
+            int delay = 10;
+
+            ConsoleKeyInfo keyPressed;
+
+            Console.BackgroundColor = ConsoleTheme.SplashScreenBackgroundColor;
+            Console.ForegroundColor = ConsoleTheme.SplashScreenForegroundColor;
+            Console.Clear();
+            Console.CursorVisible = false;
+
+            int i = -6; // The -6 is because I added frames to the beginning and don't feel like renumbering everything
+            while (i < animationLength + delay) {
+                Draw(i, animationHeight, animationLeftOffset, animationTopOffset);
+                i += 1;
+                System.Threading.Thread.Sleep(64);
+            }
+
+            string message = "Press any key to continue or Esc to exit";
+            Console.SetCursorPosition(ConsoleLayout.WindowWidth / 2 - message.Length / 2 + 1, ConsoleLayout.WindowHeight * 3 / 4);
+            Console.Write(message);
+            keyPressed = Console.ReadKey();
+            if (keyPressed.Key == ConsoleKey.Escape) {
+                playing = false;
+            }
+
+            return playing;
+        }
+
+        public void DisplayAnimation() {
+            int animationWidth = Animations.GetItemPotionSize()[0];
+            int animationHeight = Animations.GetItemPotionSize()[1];
+            int animationLength = Animations.GetItemPotionSize()[2];
+            int animationLeftOffset = ConsoleLayout.WindowWidth / 2 - animationWidth / 2 + 2; // The +2 is because it's off center and i don't feel like changing every frame
+            int animationTopOffset = ConsoleLayout.WindowHeight / 2 - animationHeight / 2;
+            int delay = 10;
+
+            ConsoleKeyInfo keyPressed;
+
+            Console.BackgroundColor = ConsoleTheme.SplashScreenBackgroundColor;
+            Console.ForegroundColor = ConsoleTheme.SplashScreenForegroundColor;
+            Console.Clear();
+            Console.CursorVisible = false;
+
+            int i = 0; // The -6 is because I added frames to the beginning and don't feel like renumbering everything
+            //while (i < animationLength + delay) {
+            while (true) {
+                Draw(i, animationHeight, animationLeftOffset, animationTopOffset);
+                i += 1;
+                if (i >= animationLength)
+                    i = 0;
+                System.Threading.Thread.Sleep(128);
+            }
+
+            string message = "Press any key to continue or Esc to exit";
+            Console.SetCursorPosition(ConsoleLayout.WindowWidth / 2 - message.Length / 2 + 1, ConsoleLayout.WindowHeight * 3 / 4);
+            Console.Write(message);
+            keyPressed = Console.ReadKey();
+        }
+
+        static void Draw(int i, int height, int leftOffset, int topOffset) {
+            string[] lineToDraw = Animations.GetIntro(i);
+            for (int y = 0; y < height; y++) {
+                Console.SetCursorPosition(leftOffset, topOffset + y);
+                Console.WriteLine(lineToDraw[y]);
+            }
+        }
+
+        #endregion
+
+        #region Inputs
+        /// <summary>
+        /// Wait for any keystroke to continue
+        /// </summary>
+        public void GetContinueKey() {
+            Console.ReadKey();
+        }
+
+        /// <summary>
+        /// Get an action menu choice from the user
+        /// </summary>
+        /// <returns>action menu choice</returns>
+        public MenuOptions GetMenuChoice(Menu menu) {
+             MenuOptions chosenOption = MenuOptions.None;
+
+            //
+            // TODO validate menu choices
+            //
+            ConsoleKeyInfo keyPressedInfo = Console.ReadKey();
+            char keyPressed = keyPressedInfo.KeyChar;
+            chosenOption = menu.MenuChoices[keyPressed];
+
+            return chosenOption;
+        }
+        #endregion
+
         /// <summary>
         /// get the player's initial information at the beginning of the game
         /// </summary>
@@ -512,8 +598,8 @@ namespace FinalProject {
             //
             // echo the traveler's info
             //
-            DisplayGamePlayScreen("Mission Initialization - Complete", Text.InitializeMissionEchoPlayerInfo(player), ActiveMenu.NoMenu, "");
-            GetContinueKey();
+            //DisplayGamePlayScreen("Mission Initialization - Complete", Text.InitializeMissionEchoPlayerInfo(player), ActiveMenu.NoMenu, "");
+            //GetContinueKey();
 
             return player;
         }
@@ -524,12 +610,21 @@ namespace FinalProject {
             DisplayGamePlayScreen("Player Information", Text.PlayerInfo(_player), ActiveMenu.FullMenu, "");
         }
 
+        public void DisplayInventory() {
+            DisplayGamePlayScreen("Player Inventory", Text.PlayerInventory(), ActiveMenu.FullMenu, "");
+        }
+
+        public void DisplayClosingScreen() {
+            DisplayGamePlayScreen("Goodbye", "", ActiveMenu.NoMenu, "");
+            Console.ReadKey();
+        }
+
         public void DisplayCurrentLocationInfo() {
-            //int currentLocationID = _player.CurrentLocationID;
 
-            //Location currentLocation = _world.GetLocationByID(currentLocationID);
+            Location currentLocation = _world.GetLocationByCoords(_player.PosX, _player.PosY);
 
-            //DisplayGamePlayScreen("Location Information", Text.CurrentLocationInfo(currentLocation), ActiveMenu.FullMenu, "");
+            DisplayGamePlayScreen("Location Information", Text.CurrentLocationInfo(currentLocation), ActiveMenu.FullMenu, "");
+            _player.Experience += currentLocation.ExperiencePoints;
         }
 
         #endregion

@@ -17,9 +17,8 @@ namespace FinalProject {
         public static string IntroductionP1() {
             string messageBoxText =
                 "\tYou live in a small village with your father.  The townsfolk say your mother died in childbirth, but then \n" +
-                "\t  they also say your parents were once great sorcerors and heros.  They can't be trusted.  They make up \n" +
-                "\t  stories to escape their boring lives.  Your mother was probably just another whore and father has never \n" +
-                "\t  anything more than a worthless drunk.";
+                "\t  they also say your parents were once great sorcerors and heros.  They can't be trusted.  Your mother was \n" +
+                "\t  probably just another whore and your father has never anything more than a worthless drunk.";
 
             return messageBoxText;
         }
@@ -52,22 +51,19 @@ namespace FinalProject {
                 "\t  voice as he slams a mallet against the base of your skull.  You slump to the ground.  You're dimly aware \n" +
                 "\t  of other voices in the room, the smell of torches, the sound of tearing wood.  The dog is free.  It tears \n" +
                 "\t  the throat from its former master.  The other voices panic as the undead animal shrugs off their blows. \n" +
-                "\t  Father grunts in his fitful sleep.  The men swing the torch at the animal.  The scent of burning hair fills the \n" +
-                "\t  room.  Father screams.  You stumble out the back door as the walls begin to blister.";
+                "\t  Father grunts in his fitful sleep.  A man swings his torch at the animal.  The scent of burning hair fills \n" +
+                "\t  the room.  Father screams.  You drag yourself out the back door as the walls begin to blister.";
             return messageBoxText;
         }
 
         public static string CurrentLocationInfo(Location location) {
             string messageBoxText =
-                $"Current Location: {location.CommonName}" + "\t" +
-            " \n" +
-            "\tChoose from the menu options to proceed.\n";
+                $"Current Location({location.xCoord},{location.yCoord}): {location.CommonName} \n \n \t {location.Description} \n \n \n \t \t \t Experience gained: {location.ExperiencePoints}";
 
             return messageBoxText;
         }
 
         #region Initialize Mission Text
-
         public static string InitializeMissionGetPlayerName() {
             string messageBoxText =
                 "Enter your name.";
@@ -111,7 +107,14 @@ namespace FinalProject {
                 $"\tIntelligence: {player.Intelligence}\n" +
                 $"\tWisdom: {player.Wisdom}\n" +
                 $"\tCharisma: {player.Charisma}\n" +
+                $"\tExperience: {player.Experience}\n" +
                 " \n";
+
+            return messageBoxText;
+        }
+
+        public static string PlayerInventory() {
+            string messageBoxText = "You don't have any items.";
 
             return messageBoxText;
         }

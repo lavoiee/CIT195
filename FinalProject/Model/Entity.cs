@@ -37,6 +37,7 @@ namespace FinalProject {
         protected int _posX;
         protected int _posY;
         protected int _moveSpeed;
+        protected int _experience;
 
         #endregion
 
@@ -106,6 +107,11 @@ namespace FinalProject {
         public int MoveSpeed {
             get { return _moveSpeed; }
             set { _moveSpeed = value; }
+        }
+
+        public int Experience {
+            get { return _experience; }
+            set { _experience = value; }
         }
 
         #endregion

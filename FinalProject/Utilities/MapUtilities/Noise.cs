@@ -6,7 +6,21 @@ using System.Threading.Tasks;
 
 namespace FinalProject {
     class Noise {
-
+        /// <summary>
+        /// Returns a map of coherent noise in a two dimensional array
+        /// </summary>
+        /// <param name="mapWidth"></param>
+        /// <param name="mapHeight"></param>
+        /// <param name="seed"></param>
+        /// <param name="xZoom"></param>
+        /// <param name="yZoom"></param>
+        /// <param name="scale"></param>
+        /// <param name="octaves"></param>
+        /// <param name="persistance"></param>
+        /// <param name="lacunarity"></param>
+        /// <param name="_offsetX"></param>
+        /// <param name="_offsetY"></param>
+        /// <returns></returns>
         public static float[,] GenerateNoiseMap(int mapWidth, int mapHeight, int seed, int xZoom, int yZoom, float scale, int octaves, float persistance, float lacunarity, int _offsetX, int _offsetY) {
             float[,] noiseMap = new float[mapWidth, mapHeight];
 
@@ -67,6 +81,13 @@ namespace FinalProject {
             return noiseMap;
         }
 
+        /// <summary>
+        /// Constrains a float between a min and max
+        /// </summary>
+        /// <param name="toClamp"></param>
+        /// <param name="min"></param>
+        /// <param name="max"></param>
+        /// <returns></returns>
         public static float Clamp(float toClamp, float min, float max) {
             float clamped = toClamp;
             if (clamped < min) clamped = min;

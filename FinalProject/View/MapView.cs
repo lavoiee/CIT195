@@ -26,32 +26,35 @@ namespace FinalProject {
             _player = gamePlayer;
             _world = gameWorld;
 
-            InitializeMap();
+            //InitializeMap();
         }
 
         #endregion
 
         #region METHODS
-
+        /*
         public void InitializeMap() {
             MapWindowControl.InitializeMaps();
         }
 
         public void DisplayWorldMap() {
+            DisplayWorldMap(false);
+        }
+
+        public void DisplayWorldMap(bool zooming) {
             bool drawing = true;
+            int zoom = MapWindowControl.zoomLevels;
+            MapWindowControl.Zoom = zoom;
+            ConsoleView.DisplayGamePlayScreen("Location Information", Text.CurrentLocationInfo(currentLocation), ActiveMenu.FullMenu, "");
+            while (zoom > 0 && zooming) {
+                MapWindowControl.Move(0, 0, -1);
+                MapWindowControl.DrawScreen();
+                zoom -= 1;
+            }
             while (drawing) {
                 drawing = MovePlayer();
                 MapWindowControl.DrawScreen();
             }
-            /*
-            //Move();
-            while (drawing) {
-                DrawScreen();
-                timer += 5;
-                Console.SetCursorPosition(0, 0);
-                DisplayContinuePrompt();
-                Move();
-            }*/
         }
 
         public bool MovePlayer() {
@@ -61,6 +64,7 @@ namespace FinalProject {
             int moveY = 0;
             int zoom = 0;
 
+            //if (response.KeyChar == '1') return false;
             if (response.KeyChar == '2') return false;
             if (response.KeyChar == '3') return false;
             if (response.KeyChar == '4') return false;
@@ -76,7 +80,7 @@ namespace FinalProject {
 
             return true;
         }
-
+        */
         #endregion
     }
 }
