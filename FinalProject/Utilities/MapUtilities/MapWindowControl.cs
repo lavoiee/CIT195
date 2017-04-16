@@ -26,6 +26,8 @@ namespace FinalProject {
         public static int yZoom = 20;
         public static int zoomLevels = 20;
 
+        public static int seed = 3465;
+
         private static Random prng = new Random();
         #endregion Fields
 
@@ -63,7 +65,7 @@ namespace FinalProject {
             windowHeight = ConsoleLayout.MainBoxHeight - 2;
             windowLeft = ConsoleLayout.MainBoxPositionLeft + 1;
             windowTop = ConsoleLayout.MainBoxPositionTop + 1;
-            map = new NoiseMap(windowWidth + 1, windowHeight + 1, 3465, xZoom, yZoom, scale, 8, 0.85f, 1.5f, windowWidth / 2 + posX, windowHeight / 2 + posY);
+            map = new NoiseMap(windowWidth + 1, windowHeight + 1, seed, xZoom, yZoom, scale, 8, 0.85f, 1.5f, windowWidth / 2 + posX, windowHeight / 2 + posY);
             //treeMap = new NoiseMap(SCREEN_WIDTH, SCREEN_HEIGHT, 86263, scale, 8, 0.75f, 1.5f, SCREEN_WIDTH / 2 + posX, SCREEN_HEIGHT / 2 + posY);
         }
 
@@ -131,7 +133,7 @@ namespace FinalProject {
             }
         }
 
-        static char ChangeColors(int c, string mapType) {
+        public static char ChangeColors(int c, string mapType) {
             if (mapType == "terrain") {
                 if (c == 0) {
                     Console.ForegroundColor = ConsoleColor.Black;
@@ -249,6 +251,11 @@ namespace FinalProject {
                 }
             }
             return '!';
+        }
+
+        // Returns the height of the center of the viewport (the player)
+        public static int GetHeightAtPlayerPosition() {
+            return (int)map.Map[(ConsoleLayout.MainBoxWidth - 2)/2, (ConsoleLayout.MainBoxHeight - 2)/2];
         }
 
         static string GetRandomAlpha() {

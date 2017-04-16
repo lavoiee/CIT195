@@ -10,10 +10,27 @@ namespace FinalProject {
     /// </summary>
     public enum MenuOptions {
         None,
+
+        // Main Menu
         Character,
         Inventory,
         WorldMap,
-        LocalMap,
-        Settings
+        Explore,
+        Settings,
+        Exit,
+
+        // Settings
+        Back,
+        DevMenu,
+
+        // Developer Actions
+        ListLocations,
+        ListObjects,
+
+        // Player actions
+        LookAround,
+        LookAt,
+        PickUp,
+        PutDown
     }
 }

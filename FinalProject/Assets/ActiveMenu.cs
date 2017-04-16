@@ -12,20 +12,52 @@ namespace FinalProject {
         public static Menu NoMenu = new Menu() {
             MenuName = "|  Menu  |",
             MenuTitle = "",
-            MenuChoices = new Dictionary<char, MenuOptions>() {
-                { ' ', MenuOptions.None }
+            MenuChoices = new Dictionary<int, MenuOptions>() {
+                { 0, MenuOptions.None }
             }
         };
 
+        // TODO do something with the menu names and titles or get rid of them
         public static Menu FullMenu = new Menu() {
-            MenuName = "Shitfuck",
-            MenuTitle = "Main Menu",
-            MenuChoices = new Dictionary<char, MenuOptions>() {
-                { '1', MenuOptions.WorldMap },
-                { '2', MenuOptions.LocalMap },
-                { '3', MenuOptions.Character },
-                { '4', MenuOptions.Inventory },
-                { '5', MenuOptions.Settings }
+            MenuName = "",
+            MenuTitle = "Information",
+            MenuChoices = new Dictionary<int, MenuOptions>() {
+                { 1, MenuOptions.WorldMap },
+                { 2, MenuOptions.Explore },
+                { 3, MenuOptions.Character },
+                { 4, MenuOptions.Inventory },
+                { 5, MenuOptions.Settings }
+            }
+        };
+
+        public static Menu ActionMenu = new Menu() {
+            MenuName = "",
+            MenuTitle = "Actions",
+            MenuChoices = new Dictionary<int, MenuOptions>() {
+                { 1, MenuOptions.Back },
+                { 2, MenuOptions.LookAround },
+                { 3, MenuOptions.LookAt },
+                { 4, MenuOptions.PickUp },
+                { 5, MenuOptions.PutDown }
+            }
+        };
+
+        public static Menu SettingsMenu = new Menu() {
+            MenuName = "",
+            MenuTitle = "Settings",
+            MenuChoices = new Dictionary<int, MenuOptions>() {
+                { 1, MenuOptions.Back },
+                { 2, MenuOptions.DevMenu }
+            }
+        };
+
+        public static Menu DevMenu = new Menu() {
+            MenuName = "",
+            MenuTitle = "Settings",
+            MenuChoices = new Dictionary<int, MenuOptions>() {
+                { 1, MenuOptions.Back },
+                { 2, MenuOptions.ListLocations },
+                { 3, MenuOptions.ListObjects }
             }
         };
     }

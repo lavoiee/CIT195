@@ -38,6 +38,10 @@ namespace FinalProject {
         protected int _posY;
         protected int _moveSpeed;
         protected int _experience;
+        protected List<CollectibleObject> _inventory;
+        protected int _healthRegenTime = 20;
+        protected int _healthRegenTimer = 20;
+
 
         #endregion
 
@@ -81,7 +85,12 @@ namespace FinalProject {
 
         public int Health {
             get { return _health; }
-            set { _health = value; }
+            set {
+                if (value > _maxHealth)
+                    _health = _maxHealth;
+                else
+                    _health = value;
+            }
         }
 
         public int MaxHealth {
@@ -114,17 +123,23 @@ namespace FinalProject {
             set { _experience = value; }
         }
 
+        public List<CollectibleObject> Inventory {
+            get { return _inventory; }
+            set { _inventory = value; }
+        }
+
         #endregion
 
         #region CONSTRUCTORS
 
         public Entity() {
-
+            _inventory = new List<CollectibleObject>();
         }
 
         public Entity(string name, SpeciesType species) {
             _name = name;
             _species = species;
+            _inventory = new List<CollectibleObject>();
         }
 
 
@@ -142,14 +157,21 @@ namespace FinalProject {
             _posX = posX;
             _posY = posY;
             _moveSpeed = moveSpeed;
+            _inventory = new List<CollectibleObject>();
         }
 
         #endregion
 
         #region METHODS
 
-
-
+        public void HealthRegen() {
+            _healthRegenTimer--;
+            if (_healthRegenTimer <= 0 && _health < _maxHealth) {
+                _health++;
+                _healthRegenTimer = _healthRegenTime;
+            }
+        }
+        
         #endregion
     }
 }

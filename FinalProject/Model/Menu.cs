@@ -11,7 +11,7 @@ namespace FinalProject {
     public class Menu {
         public string MenuName { get; set; }
         public string MenuTitle { get; set; }
-        public Dictionary<char, MenuOptions> MenuChoices { get; set; }
+        public Dictionary<int, MenuOptions> MenuChoices { get; set; }
 
         public Dictionary<int, string> InteractiveMenuChoices { get; set; }
     }

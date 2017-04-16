@@ -13,6 +13,9 @@ namespace FinalProject {
         public static Dictionary<int, string> MenuItems = new Dictionary<int, string> {
         };
         public static Menu CharacterCreation = new Menu() {
+
+            // TODO do something with the menu names and titles
+
             MenuName = "Character Creation",
             MenuTitle = "I'm in the interactiveMenu class, fix me",
             InteractiveMenuChoices = new Dictionary<int, string>() {
@@ -22,6 +25,14 @@ namespace FinalProject {
                 { 4, "Intelligence" },
                 { 5, "Wisdom" },
                 { 6, "Charisma" }
+            }
+        };
+
+        public static Menu Inventory = new Menu() {
+            MenuName = "Inventory",
+            MenuTitle = "I'm in the interactiveMenu class, fix me",
+            InteractiveMenuChoices = new Dictionary<int, string>() {
+
             }
         };
     }

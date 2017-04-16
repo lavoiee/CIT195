@@ -15,10 +15,24 @@ namespace FinalProject {
         #endregion
 
         #region FIELDS
+
+        bool _isPossessing = false;
+        double _age;
+
         #endregion
 
 
         #region PROPERTIES
+
+        public bool IsPossessing {
+            get { return _isPossessing; }
+            set { _isPossessing = value; }
+        }
+        public double Age {
+            get { return _age; }
+            set { _age = value; }
+        }
+
 
         #endregion
 
@@ -26,10 +40,9 @@ namespace FinalProject {
         #region CONSTRUCTORS
 
         public Player() {
-
         }
 
-        public Player(string name, int strength, int dexterity, int constitution, int intelligence, int wisdom, int charisma, int health, int maxHealth, int posX, int posY, int moveSpeed) : base(name, strength, dexterity, constitution, intelligence, wisdom, charisma, health, maxHealth, posX, posY, moveSpeed) {
+        public Player(string name, int strength, int dexterity, int constitution, int intelligence, int wisdom, int charisma, int health, int maxHealth, int posX, int posY, int moveSpeed, List<CollectibleObject> inventory) : base(name, strength, dexterity, constitution, intelligence, wisdom, charisma, health, maxHealth, posX, posY, moveSpeed) {
 
         }
 
@@ -37,7 +50,6 @@ namespace FinalProject {
 
 
         #region METHODS
-
 
         #endregion
     }

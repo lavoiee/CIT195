@@ -64,7 +64,7 @@ namespace FinalProject {
         public Human() {
 
         }
-
+        // TODO unfuck constructors
         public Human(string name, int strength, int dexterity, int constitution, int intelligence, int wisdom, int charisma, int health, int maxHealth, int posX, int posY, int moveSpeed) : base(name, SpeciesType.Human, strength, dexterity, constitution, intelligence, wisdom, charisma, health, maxHealth, posX, posY, moveSpeed) {
 
         }

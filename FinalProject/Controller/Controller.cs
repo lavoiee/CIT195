@@ -5,6 +5,42 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace FinalProject {
+
+
+    //TODO Admin menu
+        // List all locations
+        // List all objects
+        // ** Create/edit an object
+        // ** Edit a location
+
+
+
+/*
+        Homework
+
+
+get max location? Add bounds?
+Manage game loop to handle inputs
+track visited locations
+add hasVisited method to entity class
+add health and status bar to the side menu
+
+        add forests
+        add mazes
+
+partial classes - separate assets by types
+	text class - separate into story, menu, and gameplay
+    
+*/
+
+
+
+
+
+
+
+
+
     /// <summary>
     /// controller for the MVC pattern in the application
     /// </summary>
@@ -12,12 +48,14 @@ namespace FinalProject {
         #region FIELDS
 
         private ConsoleView _gameConsoleView;
-        private MapView _gameMapView;
         private Player _player;
         private World _world;
+        private bool back = false;
+
+        private Location _currentLocation;
+        private List<Location> _locationsVisited;
+
         private bool _playingGame;
-        private MenuOptions _currentScreen;
-        private bool initializedMap = false;
 
         #endregion
 
@@ -47,7 +85,14 @@ namespace FinalProject {
             _world = new World();
             _gameConsoleView = new ConsoleView(_player, _world);
             _playingGame = true;
+            _locationsVisited = new List<Location>();
+            Text.InitializeRandomBiomes();
 
+            //Add initial item(s) to player
+            AddItemToInventory(_world.GetGameObjectById(1) as CollectibleObject);
+            AddItemToInventory(_world.GetGameObjectById(2) as CollectibleObject);
+            AddItemToInventory(_world.GetGameObjectById(3) as CollectibleObject);
+            
             Console.CursorVisible = false;
         }
 
@@ -56,66 +101,79 @@ namespace FinalProject {
         /// </summary>
         private void ManageGameLoop() {
             MenuOptions playerMenuChoice = MenuOptions.None;
+            Menu currentMenu = ActiveMenu.NoMenu;
+            bool devMode = false;
 
-            //
-            // display splash screen
-            //
-            //_playingGame = true;
-            _gameConsoleView.DisplayIntroScreen();
-            //_gameConsoleView.DisplayAnimation();
+            if (!devMode) {
+                //
+                // display splash screen
+                //
+                _playingGame = true;
+                _gameConsoleView.DisplayIntroScreen();
+                //_gameConsoleView.DisplayAnimation();
 
 
-            //
-            // player chooses to quit
-            //
-            if (!_playingGame) {
-                /// TODO animate outro-------------------------------------------------------------------------------------------------------------
-                Environment.Exit(1);
+                //
+                // player chooses to quit
+                //
+                if (!_playingGame) {
+                    /// TODO animate outro-------------------------------------------------------------------------------------------------------------
+                    Environment.Exit(1);
+                }
+                //
+                // Display introductory message
+                //
+                _gameConsoleView.DisplayGamePlayScreen("Part One", Text.IntroductionP1(),ActiveMenu.NoMenu);
+                _gameConsoleView.GetContinueKey();
+
+                //
+                // Initialize the player's stats
+                // 
+                InitializePlayerStats();
+
+                //
+                // Display introductory message
+                //
+                _gameConsoleView.DisplayGamePlayScreen("Part Two", Text.IntroductionP2(), ActiveMenu.NoMenu);
+                _gameConsoleView.GetContinueKey();
+
+                //
+                // Initialize the player's spells
+                // 
+                _gameConsoleView.DisplayGamePlayScreen("Book of Necromancy", "This is where you will choose your starting spells", ActiveMenu.NoMenu);
+                _gameConsoleView.GetContinueKey();
+                //InitializePlayerSpells();
+
+                //
+                // Display introductory message
+                //
+                _gameConsoleView.DisplayGamePlayScreen("Part Three", Text.IntroductionP3(), ActiveMenu.NoMenu);
+                _gameConsoleView.GetContinueKey();
+
+                //
+                // Prepare game play screen
+                //
+                _gameConsoleView.DisplayWorldMap(true);
+            } else {
+                _gameConsoleView.DisplayWorldMap();
             }
-
-            //
-            // Display introductory message
-            //
-            _gameConsoleView.DisplayGamePlayScreen("Part One", Text.IntroductionP1(),ActiveMenu.NoMenu, "");
-            _gameConsoleView.GetContinueKey();
-
-            //
-            // Initialize the player's stats
-            // 
-            InitializePlayerStats();
-
-            //
-            // Display introductory message
-            //
-            _gameConsoleView.DisplayGamePlayScreen("Part Two", Text.IntroductionP2(), ActiveMenu.NoMenu, "");
-            _gameConsoleView.GetContinueKey();
-
-            //
-            // Initialize the player's spells
-            // 
-            _gameConsoleView.DisplayGamePlayScreen("Book of Necromancy", "This is where you will choose your starting spells", ActiveMenu.NoMenu, "");
-            _gameConsoleView.GetContinueKey();
-            //InitializePlayerSpells();
-
-            //
-            // Display introductory message
-            //
-            _gameConsoleView.DisplayGamePlayScreen("Part Three", Text.IntroductionP3(), ActiveMenu.NoMenu, "");
-            _gameConsoleView.GetContinueKey();
-
-
-            //
-            // Prepare game play screen
-            //
-            _gameConsoleView.DisplayWorldMap(true);
 
             //
             // Game loop
             //
             while (_playingGame) {
-                
-                playerMenuChoice = _gameConsoleView.GetMenuChoice(ActiveMenu.FullMenu);
+                UpdateGameStatus();
 
+                _currentLocation = _world.GetLocationByCoords(_player.PosX, _player.PosY);
+                _locationsVisited.Add(_currentLocation);
+                
+                playerMenuChoice = _gameConsoleView.GetMenuEscape(_gameConsoleView.CurrentMenu);
+                if (playerMenuChoice == MenuOptions.None) {
+                    playerMenuChoice = _gameConsoleView.GetMenuChoice(_gameConsoleView.CurrentMenu, back);
+                }
+                back = false;
+                _gameConsoleView.MenuEscape = 0;
+                _gameConsoleView.CurrentMenuChoice = playerMenuChoice;
                 //
                 // choose an action based on the user's menu choice
                 //
@@ -123,25 +181,53 @@ namespace FinalProject {
                     case MenuOptions.None:
                         break;
 
+                    // Main Menu
                     case MenuOptions.WorldMap:
                         _gameConsoleView.DisplayWorldMap();
                         break;
 
-                    case MenuOptions.LocalMap:
+                    case MenuOptions.Explore:
                         _gameConsoleView.DisplayCurrentLocationInfo();
                         break;
 
                     case MenuOptions.Character:
-                        _gameConsoleView.DisplayTravelerInfo();
+                        _gameConsoleView.DisplayPlayerInfo();
                         break;
 
                     case MenuOptions.Inventory:
-                        _gameConsoleView.DisplayInventory();
+                        _gameConsoleView.DisplayInventory(_player.Inventory, true);
                         break;
 
                     case MenuOptions.Settings:
-                        _gameConsoleView.DisplayClosingScreen();
-                        _playingGame = false;
+                        _gameConsoleView.DisplaySettings();
+                        break;
+
+                    // Settings
+                    case MenuOptions.DevMenu:
+                        _gameConsoleView.DisplayDevMenu();
+                        break;
+
+                    case MenuOptions.Back:
+                        back = true;
+                        break;
+
+                    // Player Actions
+                    case MenuOptions.LookAt:
+                        _gameConsoleView.DisplayLookAt();
+                        break;
+
+                    case MenuOptions.LookAround:
+                        _gameConsoleView.DisplayLookAround();
+                        break;
+
+
+                    // Developer Actions
+                    case MenuOptions.ListLocations:
+                        _gameConsoleView.DisplayListOfAllLocations();
+                        break;
+
+                    case MenuOptions.ListObjects:
+                        _gameConsoleView.DisplayListOfAllGameObjects();
                         break;
 
                     default:
@@ -173,6 +259,25 @@ namespace FinalProject {
             _player.Intelligence = player.Intelligence;
             _player.Wisdom = player.Wisdom;
             _player.Charisma = player.Charisma;
+
+            // TODO add racial base values
+            // TODO first rethink the player/race/entity structure
+            _player.MaxHealth = 30 + _player.Constitution * 3;
+            _player.Health = _player.MaxHealth / 4;
+        }
+
+        private void AddItemToInventory(CollectibleObject item) {
+            _player.Inventory.Add(item);
+            item.Owner = _player;
+
+        }
+
+        private void UpdateGameStatus() {
+            _gameConsoleView.DisplaySideWindowInformation();
+
+            // TODO implement this for all entities
+            _player.HealthRegen();
+
         }
 
         #endregion

@@ -38,8 +38,8 @@ namespace FinalProject {
         //
         public static ConsoleColor MenuBackgroundColor = ConsoleColor.Black;
         public static ConsoleColor MenuForegroundColor = ConsoleColor.White;
-        public static ConsoleColor MenuSelectionBackgroundColor = ConsoleColor.White;
-        public static ConsoleColor MenuSelectionForegroundColor = ConsoleColor.Red;
+        public static ConsoleColor MenuSelectionBackgroundColor = ConsoleColor.Black;
+        public static ConsoleColor MenuSelectionForegroundColor = ConsoleColor.White;
         public static ConsoleColor MenuBorderColor = ConsoleColor.Gray;
 
         //

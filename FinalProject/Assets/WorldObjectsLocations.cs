@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace FinalProject {
     /// <summary>
-    /// Static class to hold all objects in the game world; locations, game objects, npc's
+    /// A partial class to hold all location objects in the game world
     /// </summary>
-    public static class WorldObjects {
+    public static partial class WorldObjects {
         public static IEnumerable<Location> Locations = new List<Location>()
         {
             new Location
