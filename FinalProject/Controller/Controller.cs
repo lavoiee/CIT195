@@ -108,8 +108,7 @@ partial classes - separate assets by types
                 //
                 // display splash screen
                 //
-                _playingGame = true;
-                _gameConsoleView.DisplayIntroScreen();
+                _playingGame = _gameConsoleView.DisplayIntroScreen();
                 //_gameConsoleView.DisplayAnimation();
 
 
@@ -123,8 +122,8 @@ partial classes - separate assets by types
                 //
                 // Display introductory message
                 //
-                _gameConsoleView.DisplayGamePlayScreen("Part One", Text.IntroductionP1(),ActiveMenu.NoMenu);
-                _gameConsoleView.GetContinueKey();
+                //_gameConsoleView.DisplayGamePlayScreen("Part One", Text.IntroductionP1(),ActiveMenu.NoMenu);
+                //_gameConsoleView.GetContinueKey();
 
                 //
                 // Initialize the player's stats
@@ -248,8 +247,8 @@ partial classes - separate assets by types
         private void InitializePlayerStats() {
             Player player = _gameConsoleView.GetInitialPlayerInfo();
 
-            _player.PosX = 0;
-            _player.PosY = 0;
+            _player.PosX = 1332;
+            _player.PosY = 866;
             _player.MoveSpeed = 1;
             _player.Name = player.Name;
             _player.Species = Entity.SpeciesType.Human;

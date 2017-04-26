@@ -15,9 +15,10 @@ namespace FinalProject {
 
         private static NoiseMap map;
         private static NoiseMap treeMap;
+        private static NoiseMap rockMap;
 
-        private static int posX = 1300;
-        private static int posY = 850;
+        private static int posX = 1332;
+        private static int posY = 866;
 
         private static int moveSpeed = 5;
 
@@ -66,7 +67,8 @@ namespace FinalProject {
             windowLeft = ConsoleLayout.MainBoxPositionLeft + 1;
             windowTop = ConsoleLayout.MainBoxPositionTop + 1;
             map = new NoiseMap(windowWidth + 1, windowHeight + 1, seed, xZoom, yZoom, scale, 8, 0.85f, 1.5f, windowWidth / 2 + posX, windowHeight / 2 + posY);
-            //treeMap = new NoiseMap(SCREEN_WIDTH, SCREEN_HEIGHT, 86263, scale, 8, 0.75f, 1.5f, SCREEN_WIDTH / 2 + posX, SCREEN_HEIGHT / 2 + posY);
+            treeMap = new NoiseMap(windowWidth + 1, windowHeight + 1, seed+1, xZoom, yZoom, scale*.125f, 8, 0.85f, 1.8f, windowWidth / 2 + posX, windowHeight / 2 + posY);
+            rockMap = new NoiseMap(windowWidth + 1, windowHeight + 1, seed + 10, xZoom, yZoom, scale * .0125f, 8, 1f, 0.18f, windowWidth / 2 + posX, windowHeight / 2 + posY);
         }
 
         public static int[] Move(int moveX, int moveY, int zoom) {
@@ -77,10 +79,22 @@ namespace FinalProject {
             posX += moveX * xZoom;
             posY += moveY * yZoom;
 
+
+            // TODO encapsulate this
             map.Xzoom = xZoom;
             map.Yzoom = yZoom;
             map.OffsetX = posX;
             map.OffsetY = posY;
+
+            treeMap.Xzoom = xZoom;
+            treeMap.Yzoom = yZoom;
+            treeMap.OffsetX = posX;
+            treeMap.OffsetY = posY;
+
+            rockMap.Xzoom = xZoom;
+            rockMap.Yzoom = yZoom;
+            rockMap.OffsetX = posX;
+            rockMap.OffsetY = posY;
 
             int[] pos = { posX, posY };
 
@@ -97,35 +111,49 @@ namespace FinalProject {
             string mapType = "terrain";
             char nextChar;
             int temp = -1;
+            string terrainFeature = "first";
+            string terrainFeaturePrev = "";
+            bool changed = true;
             for (int y = 0; y < windowHeight; y += 1) {
                 //ChangeColors(prevColor, mapType);
+                //changed = false;
                 Console.Write(toWrite);
                 Console.SetCursorPosition(windowLeft, windowTop + y);
                 prevColor = temp;
-                nextChar = ChangeColors(prevColor, mapType);
+                terrainFeaturePrev = terrainFeature;
+                nextChar = ChangeColors(prevColor, mapType, terrainFeaturePrev);
                 toWrite = "";
                 for (int x = 0; x < windowWidth; x++) {
                     if (y != windowHeight || x != windowWidth) {
+                        changed = true;
+                        terrainFeature = "";
+                        if ((int)treeMap.Map[x, y] > 9 && prevColor > 4 && prevColor < 8)
+                            terrainFeature = "tree";
+                        if ((int)rockMap.Map[x, y] > 11 && prevColor > 4 && prevColor < 12)
+                            terrainFeature = "rock";
                         temp = (int)map.Map[x, y];
-                        if (temp > maxTemp) maxTemp = temp;
-                        if (temp < minTemp) minTemp = temp;
-                        if (temp == prevColor || prevColor == -1) {
+                        if ((temp == prevColor || prevColor == -1) && (terrainFeature == terrainFeaturePrev))
+                            changed = false;
+                        if (!changed) {
                             if (x <= windowWidth - 1 && y != windowHeight) {
                                 toWrite += "▒";//nextChar.ToString();
                                 prevColor = temp;
+                                terrainFeaturePrev = terrainFeature;
                             }
                             if (x >= windowWidth - 1) {
                                 prevColor = temp;
-                                ChangeColors(prevColor, mapType);
+                                terrainFeaturePrev = terrainFeature;
+                                ChangeColors(prevColor, mapType, terrainFeaturePrev);
                                 Console.Write(toWrite);
                                 toWrite = "";
                             }
                         } else {
-                            ChangeColors(prevColor, mapType);
+                            nextChar = ChangeColors(prevColor, mapType, terrainFeaturePrev);
                             Console.Write(toWrite);
                             prevColor = temp;
+                            terrainFeaturePrev = terrainFeature;
                             //ChangeColors(prevColor, mapType);
-                            toWrite = "▒";// nextChar.ToString();▒
+                            toWrite = "▒";//nextChar.ToString();//▒
                         }
                         //WriteScreen(temp, prevColor, toWrite);
                     }
@@ -133,7 +161,7 @@ namespace FinalProject {
             }
         }
 
-        public static char ChangeColors(int c, string mapType) {
+        public static char ChangeColors(int c, string mapType, string environmentObject) {
             if (mapType == "terrain") {
                 if (c == 0) {
                     Console.ForegroundColor = ConsoleColor.Black;
@@ -191,81 +219,49 @@ namespace FinalProject {
                     Console.ForegroundColor = ConsoleColor.Red;
                     Console.BackgroundColor = ConsoleColor.Red;
                 }
-                return '▒';
-            }
-            if (mapType == "intro") {
-                if (c == 0) {
+                if (environmentObject == "tree") {
                     Console.ForegroundColor = ConsoleColor.Black;
-                    Console.BackgroundColor = ConsoleColor.Black;
-                    return ' ';
+                    return '1';
                 }
-                if (c == 1) {
-                    Console.ForegroundColor = ConsoleColor.DarkGray;
-                    Console.BackgroundColor = ConsoleColor.Black;
-                    return '░';
-                }
-                if (c == 2) {
-                    Console.ForegroundColor = ConsoleColor.DarkGray;
-                    Console.BackgroundColor = ConsoleColor.Black;
-                    return '▒';
-                }
-                if (c == 3) {
-                    Console.ForegroundColor = ConsoleColor.DarkGray;
-                    Console.BackgroundColor = ConsoleColor.Black;
-                    return '▒';
-                }
-                if (c == 4) {
-                    Console.ForegroundColor = ConsoleColor.DarkGray;
-                    Console.BackgroundColor = ConsoleColor.DarkGray;
-                    return ' ';
-                }
-                if (c == 5) {
+                if (environmentObject == "rock") {
                     Console.ForegroundColor = ConsoleColor.Gray;
-                    Console.BackgroundColor = ConsoleColor.DarkGray;
-                    return '░';
+                    return 'o';
                 }
-                if (c == 6) {
-                    Console.ForegroundColor = ConsoleColor.Gray;
-                    Console.BackgroundColor = ConsoleColor.DarkGray;
-                    return '▒';
+                if (environmentObject == "player") {
+                    Console.ForegroundColor = ConsoleColor.Blue;
+                    return 'X';
                 }
-                if (c == 7) {
-                    Console.ForegroundColor = ConsoleColor.Gray;
-                    Console.BackgroundColor = ConsoleColor.DarkGray;
-                    return '▒';
-                }
-                if (c == 8) {
-                    Console.ForegroundColor = ConsoleColor.Gray;
-                    Console.BackgroundColor = ConsoleColor.Gray;
-                    return ' ';
-                }
-                if (c == 9) {
+                if (environmentObject == "item") {
+                    Console.BackgroundColor = ConsoleColor.Red;
                     Console.ForegroundColor = ConsoleColor.White;
-                    Console.BackgroundColor = ConsoleColor.Gray;
-                    return '░';
+                    return '!';
                 }
-                if (c == 15) {
+                if (environmentObject == "location") {
+                    Console.BackgroundColor = ConsoleColor.Black;
                     Console.ForegroundColor = ConsoleColor.White;
-                    Console.BackgroundColor = ConsoleColor.White;
-                    return '▒';
+                    return '^';
                 }
+                return '▒';
             }
             return '!';
         }
 
         // Returns the height of the center of the viewport (the player)
-        public static int GetHeightAtPlayerPosition() {
-            return (int)map.Map[(ConsoleLayout.MainBoxWidth - 2)/2, (ConsoleLayout.MainBoxHeight - 2)/2];
+        public static int GetHeightAtPosition() {
+            return (int)map.Map[(ConsoleLayout.MainBoxWidth - 2) / 2, (ConsoleLayout.MainBoxHeight - 2) / 2];
         }
-
+        public static int GetHeightAtPosition(int x, int y) {
+            return (int)map.Map[x, y];
+        }
+        public static int GetDistance(int x1, int y1, int x2, int y2) {
+            return ((int)Math.Sqrt((x2-x1) * (x2-x1) + (y2-y1) * (y2 - y1)));
+        }
         static string GetRandomAlpha() {
             return ((char)('A' + GetRandom(26))).ToString();
         }
-
         static int GetRandom(int _max) {
             return prng.Next(0, _max);
         }
-
         static int GetRandom(int _min, int _max) {
             return prng.Next(_min, _max);
         }

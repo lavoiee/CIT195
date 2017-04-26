@@ -9,7 +9,7 @@ namespace FinalProject {
     /// class to store static and to generate dynamic text for the message and input boxes
     /// </summary>
     public static class Text {
-        public static List<string> HeaderText = new List<string>() { "The Necromancer" };
+        public static List<string> HeaderText = new List<string>() { "Necromancy" };
         public static List<string> FooterText = new List<string>() { "Lichty, CIT195" };
 
         // Biomes
@@ -56,17 +56,19 @@ namespace FinalProject {
         public static string IntroductionP2() {
             string messageBoxText =
                 "Something feels different as you shake the rain from your cloak in the entryway of your run down house.\n" +
-                "  In the light of the open door, you notice muddy footprints amidst the flith covering the floor.  There is \n" +
-                "  a sickening retch from the other room.  You relax.  Maybe father will pass out early tonight.  You enter \n" +
-                "  the room to see his familiar frame sprawled out next to an array of empty bottles.  One, still half \n" +
-                "  empty, rests in the center of the floor's newest stain.  Another retching gasp drowns out your father's \n" +
-                "  snores.  You spin just in time to see the disemboweled dog lunge at your face.  A chain leaps and the dog \n" +
-                "  jerks to a stop.  The momentum of the animal's sagging organs carries their gore over your rain soaked \n" +
-                "  cloak.  It lets out a gurgling growl and strains against the chain.  This was the baker's dog!  How is \n" +
-                "  this creature alive?  Something in the fringes of your vision draws your attention.  Just outside the \n" +
-                "  ring of gore soaking through the floorboards, lies a book. The book is composed of uncropped parchment, \n" +
-                "  casually bound in black leather.  Despite the low light, faint, iridescent lines wander the cover.  The \n" +
-                "  feral intensity of the beast's gnashing jaws is dulled by the call of the book. \n" + "\n " +
+                "  In the light of the open door, you notice muddy footprints soaking into the filth covered floor.  There \n" +
+                "  is a sickening retch from the other room.  You relax.  Maybe your father will pass out early tonight.  \n" +
+                "  You enter the room to see his familiar frame sprawled out next to an array of empty bottles.  One, \n" +
+                "  still half empty, rests in the center of a slowly growing puddle.  From behind you, another retching \n" +
+                "  gasp drowns out your father's snores.  You spin just in time to see the disemboweled dog lunge at your \n" +
+                "  face.  A chain leaps and the dog jerks to a stop.  The momentum of the animal's exposed, sagging organs \n" +
+                "  carries their gore over your rain soaked cloak.  It lets out a gurgling growl and strains against the \n" +
+                "  chain.  This was the baker's dog!  How is this creature alive?  You stand frozen as it lunges again, \n" +
+                "  but slips on what looks to be its own intestines.  Something in the fringes of your vision steals \n" +
+                "  your attention.  Just outside the ring of blood soaking through the floorboards, lies a book.  You \n" +
+                "  can't look away.  The book is composed of uncropped parchment casually bound in dull leather.  \n" +
+                "  Despite the low light, faint, iridescent lines wander the cover.  The feral intensity of the beast's \n" +
+                "  gnashing jaws is dulled by the call of the book. \n " + "\n" +
                 "  You pick it up an begin to read...";
 
             return messageBoxText;
@@ -80,12 +82,13 @@ namespace FinalProject {
         public static string IntroductionP3() {
 
             string messageBoxText =
-                "The pain blossoming from your back breaks you free from the book's grasp.  Dazed, you recognize the baker's \n" +
-                "  voice as he slams a mallet against the base of your skull.  You slump to the ground.  You're dimly aware \n" +
-                "  of other voices in the room, the smell of torches, the sound of tearing wood.  The dog is free.  It tears \n" +
-                "  the throat from its former master.  The other voices panic as the undead animal shrugs off their blows. \n" +
-                "  Father grunts in his fitful sleep.  A man swings his torch at the animal.  The scent of burning hair fills \n" +
-                "  the room.  Father screams.  You drag yourself out the back door as the walls begin to blister.";
+                "The pain blossoming from the back of your head breaks you free from the book's grasp.  Dazed, you \n" +
+                "  recognize the baker's voice as he, once more, slams a mallet against the base of your skull.  You \n" +
+                "  slump to the ground.  You're dimly aware of other voices in the room, the smell of torches, the sound \n" +
+                "  of tearing wood.  The dog is free.  The baker drops into your field of vision without a throat.  The \n" +
+                "  other voices panic as the undead animal shrugs off their blows.  Your drunk father mumbles in his fitful \n" +
+                "  sleep.  A man swings his torch at the animal.  The scent of burning hair fills the room.  Father screams.  \n" +
+                "  You drag yourself out the back door as the walls begin to blister.";
             return messageBoxText;
         }
 

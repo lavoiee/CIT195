@@ -295,9 +295,7 @@ namespace FinalProject {
         public void DestroyObject(CollectibleObject item) {
             if (item.Owner == _player)
                 _player.Inventory.Remove(item);
-            item.Owner = null;
-            item.xPos = int.MaxValue;
-            item.yPos = int.MaxValue;
+            _world.GameObjects.Remove(item);
         }
         public void PickUpObject(CollectibleObject grabbedObject) {
             /// Remove the object from inventory and set the location to the current value
@@ -423,7 +421,13 @@ namespace FinalProject {
             Console.SetCursorPosition(ConsoleLayout.SideWindowPositionLeft + 2, topRow += 2);
             Console.Write(ConsoleWindowHelper.Center($"({currentLocation.xCoord}, {currentLocation.yCoord})", ConsoleLayout.SideWindowWidth - 4));
             Console.SetCursorPosition(ConsoleLayout.SideWindowPositionLeft + 2, topRow += 4);
-            if (_world.GetCollectableObjectsByLocation(_player.PosX,_player.PosY).Count != 0)
+            List<CollectibleObject> items = _world.GetCollectableObjectsByLocation(_player.PosX, _player.PosY);
+            bool valid = false;
+            foreach (CollectibleObject item in items) {
+                if (item.Owner == null)
+                    valid = true;
+            }
+            if (items.Count != 0 && valid)
                 Console.Write(ConsoleWindowHelper.Center("!", ConsoleLayout.SideWindowWidth - 4));
             else
                 Console.Write(ConsoleWindowHelper.Center(" ", ConsoleLayout.SideWindowWidth - 4));
@@ -457,23 +461,61 @@ namespace FinalProject {
                 }
             }
             while (drawing) {
-                DrawPlayer();
+                DrawPlayerAndItems();
                 drawing = MovePlayer();
                 MapWindowControl.DrawScreen();
-                DrawPlayer();
+                DrawPlayerAndItems();
             }
         }
 
-        public void DrawPlayer() {
+        public void DrawPlayerAndItems() {
             DisplaySideWindowInformation();
-            // Draw Player
-            Console.BackgroundColor = ConsoleColor.Black;
-            Console.ForegroundColor = ConsoleColor.Cyan;
+            DisplayNearbyObjects();
+            DisplayNearbyLocations();
+            MapWindowControl.ChangeColors(MapWindowControl.GetHeightAtPosition(), "terrain", "player");
             Console.SetCursorPosition(MapWindowControl.WindowLeft + MapWindowControl.WindowWidth / 2, MapWindowControl.WindowTop + MapWindowControl.WindowHeight / 2);
             Console.Write("X");
             Console.SetCursorPosition(0, 0);
             Console.BackgroundColor = ConsoleColor.Black;
             Console.ForegroundColor = ConsoleColor.White;
+        }
+
+        public void DisplayNearbyObjects() {
+            foreach (CollectibleObject item in _world.GameObjects)
+                if (MapWindowControl.GetDistance(item.xPos, item.yPos, _player.PosX, _player.PosY) < 20 && item.Owner == null) {
+                    int[] tempPos = WorldPosToScreenPos(item.xPos, item.yPos);
+                    Console.SetCursorPosition(tempPos[0], tempPos[1]);
+                    tempPos = WorldPosToMapDrawPos(item.xPos, item.yPos);
+                    MapWindowControl.ChangeColors(MapWindowControl.GetHeightAtPosition(tempPos[0], tempPos[1]), "terrain", "item");
+                    Console.Write("!");
+                }
+        }
+
+        public void DisplayNearbyLocations() {
+            foreach (Location location in _world.Locations)
+                if (MapWindowControl.GetDistance(location.xCoord, location.yCoord, _player.PosX, _player.PosY) < 20 && location.Generic == false) {
+                    int[] tempPos = WorldPosToScreenPos(location.xCoord, location.yCoord);
+                    Console.SetCursorPosition(tempPos[0], tempPos[1]);
+                    tempPos = WorldPosToMapDrawPos(location.xCoord, location.yCoord);
+                    MapWindowControl.ChangeColors(MapWindowControl.GetHeightAtPosition(tempPos[0], tempPos[1]), "terrain", "location");
+                    Console.Write("^");
+                }
+        }
+
+        public int[] WorldPosToScreenPos(int x, int y) {
+            int[] screenPos = new int[2];
+            screenPos[0] = MapWindowControl.WindowLeft + MapWindowControl.WindowWidth / 2 - (_player.PosX - x);
+            screenPos[1] = MapWindowControl.WindowTop + MapWindowControl.WindowHeight / 2 + (_player.PosY - y);
+
+            return screenPos;
+        }
+
+        public int[] WorldPosToMapDrawPos(int x, int y) {
+            int[] screenPos = new int[2];
+            screenPos[0] = MapWindowControl.WindowWidth / 2 - (_player.PosX - x);
+            screenPos[1] = MapWindowControl.WindowHeight / 2 + (_player.PosY - y);
+
+            return screenPos;
         }
 
         public bool MovePlayer() {
@@ -608,7 +650,7 @@ namespace FinalProject {
         /// </summary>
         /// <returns>player chooses to play</returns>
         public bool DisplayIntroScreen() {
-            bool playing = true;
+            bool playing;
             int animationWidth = Animations.GetIntroSize()[0];
             int animationHeight = Animations.GetIntroSize()[1];
             int animationLength = Animations.GetIntroSize()[2];
@@ -636,6 +678,8 @@ namespace FinalProject {
             keyPressed = Console.ReadKey();
             if (keyPressed.Key == ConsoleKey.Escape) {
                 playing = false;
+            } else {
+                playing = true;
             }
 
             return playing;
@@ -839,17 +883,17 @@ namespace FinalProject {
                 topRow = ConsoleLayout.MainBoxPositionTop + 6;
                 foreach (KeyValuePair<int, CollectibleObject> item in inventoryToDisplay) {
 
-                    Console.SetCursorPosition(ConsoleLayout.MainBoxPositionLeft + ConsoleLayout.MainBoxWidth / 2 + 30, ConsoleLayout.MainBoxPositionTop + 2);
+                    Console.SetCursorPosition(ConsoleLayout.MainBoxPositionLeft + ConsoleLayout.MainBoxWidth / 2 + 25, ConsoleLayout.MainBoxPositionTop + 2);
                     if (item.Key == currentSelection) {
                         if (item.Value.IsUseable) {
                             if (item.Value.Type == ItemType.Consumable)
-                                Console.Write("Press <E> to use item");
+                                Console.Write("Press <E> to eat item");
                             if (item.Value.Type == ItemType.Equipment)
                                 Console.Write("Press <E> to equip item");
                             if (item.Value.Type == ItemType.Weapon)
                                 Console.Write("Press <E> to wield item");
                         } else
-                            Console.Write("                     ");
+                            Console.Write("                                 ");
                     }
 
                     string indicator = "   ";

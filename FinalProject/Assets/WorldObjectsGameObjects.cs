@@ -24,8 +24,8 @@ namespace FinalProject {
                 ID = 2,
                 Name = "Brick",
                 Description = "Red.  Bad for your teeth.",
-                xPos = 1300,
-                yPos = 850,
+                xPos = 1360,
+                yPos = 863,
                 IsUseable = true,
                 Type = ItemType.Consumable,
                 HealingValue = -5
@@ -43,8 +43,8 @@ namespace FinalProject {
                 ID = 4,
                 Name = "Book",
                 Description = "It's all spooky and stuff.",
-                xPos = 1300,
-                yPos = 850
+                xPos = 1332,
+                yPos = 867
             },
         new CollectibleObject
             {
@@ -60,7 +60,7 @@ namespace FinalProject {
                 Name = "Health potion",
                 Description = "Magically mundane!",
                 xPos = 1301,
-                yPos = 850,
+                yPos = 835,
                 Type = ItemType.Consumable,
                 IsUseable = true,
                 HealingValue = 45
@@ -81,8 +81,16 @@ namespace FinalProject {
                 ID = 8,
                 Name = "Hiking boots",
                 Description = "They stink.",
-                xPos = 1301,
-                yPos = 851
+                xPos = 1321,
+                yPos = 859
+            },
+        new CollectibleObject
+            {
+                ID = 9,
+                Name = "Blacksmith hammer",
+                Description = "Iron... heads... it works for both.",
+                xPos = 1289,
+                yPos = 853
             }
 };
     }

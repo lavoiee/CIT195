@@ -15,6 +15,5 @@ namespace FinalProject {
         public abstract bool CanPickup { get; set; }
         public abstract bool CanDrop { get; set; }
         public abstract double Value { get; set; }
-        public abstract ItemType Type {get; set;}
     }
 }

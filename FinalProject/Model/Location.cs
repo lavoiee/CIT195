@@ -19,6 +19,7 @@ namespace FinalProject {
         private bool _accessable;
         private int _experiencePoints;
         private bool _explored;
+        private bool _generic;
 
         #endregion
 
@@ -58,6 +59,11 @@ namespace FinalProject {
         public bool Explored {
             get { return _explored; }
             set { _explored = value; }
+        }
+
+        public bool Generic {
+            get { return _generic; }
+            set { _generic = value; }
         }
 
         #endregion

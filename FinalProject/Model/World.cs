@@ -98,7 +98,7 @@ namespace FinalProject {
 
         Location GenerateRandomLocation(int x, int y) {
             int random = prng.Next();
-            int height = MapWindowControl.GetHeightAtPlayerPosition();
+            int height = MapWindowControl.GetHeightAtPosition();
             string[] randomLocation = Text.GetRandomLocation(height);
             Location location = new Location {
                 CommonName = randomLocation[0],
@@ -106,7 +106,8 @@ namespace FinalProject {
                 yCoord = y,
                 Description = randomLocation[1],
                 Accessable = true,
-                ExperiencePoints = 0
+                ExperiencePoints = 0,
+                Generic = true
             };
             Locations.Add(location);
             return location;
