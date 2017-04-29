@@ -32,15 +32,6 @@ partial classes - separate assets by types
 	text class - separate into story, menu, and gameplay
     
 */
-
-
-
-
-
-
-
-
-
     /// <summary>
     /// controller for the MVC pattern in the application
     /// </summary>
@@ -56,6 +47,8 @@ partial classes - separate assets by types
         private List<Location> _locationsVisited;
 
         private bool _playingGame;
+        private bool _inBattle;
+        private Npc _opponent;
 
         #endregion
 
@@ -163,9 +156,9 @@ partial classes - separate assets by types
             while (_playingGame) {
                 UpdateGameStatus();
 
-                _currentLocation = _world.GetLocationByCoords(_player.PosX, _player.PosY);
+                _currentLocation = _world.GetLocationByCoords(_player.xPos, _player.yPos);
                 _locationsVisited.Add(_currentLocation);
-                
+
                 playerMenuChoice = _gameConsoleView.GetMenuEscape(_gameConsoleView.CurrentMenu);
                 if (playerMenuChoice == MenuOptions.None) {
                     playerMenuChoice = _gameConsoleView.GetMenuChoice(_gameConsoleView.CurrentMenu, back);
@@ -179,6 +172,8 @@ partial classes - separate assets by types
                 switch (playerMenuChoice) {
                     case MenuOptions.None:
                         break;
+
+
 
                     // Main Menu
                     case MenuOptions.WorldMap:
@@ -201,6 +196,8 @@ partial classes - separate assets by types
                         _gameConsoleView.DisplaySettings();
                         break;
 
+
+
                     // Settings
                     case MenuOptions.DevMenu:
                         _gameConsoleView.DisplayDevMenu();
@@ -209,6 +206,8 @@ partial classes - separate assets by types
                     case MenuOptions.Back:
                         back = true;
                         break;
+
+
 
                     // Player Actions
                     case MenuOptions.LookAt:
@@ -220,6 +219,7 @@ partial classes - separate assets by types
                         break;
 
 
+
                     // Developer Actions
                     case MenuOptions.ListLocations:
                         _gameConsoleView.DisplayListOfAllLocations();
@@ -227,6 +227,10 @@ partial classes - separate assets by types
 
                     case MenuOptions.ListObjects:
                         _gameConsoleView.DisplayListOfAllGameObjects();
+                        break;
+
+                    case MenuOptions.ListNpcs:
+                        _gameConsoleView.DisplayListOfAllNpcs();
                         break;
 
                     default:
@@ -247,8 +251,8 @@ partial classes - separate assets by types
         private void InitializePlayerStats() {
             Player player = _gameConsoleView.GetInitialPlayerInfo();
 
-            _player.PosX = 1332;
-            _player.PosY = 866;
+            _player.xPos = 1332;
+            _player.yPos = 866;
             _player.MoveSpeed = 1;
             _player.Name = player.Name;
             _player.Species = Entity.SpeciesType.Human;
@@ -274,9 +278,24 @@ partial classes - separate assets by types
         private void UpdateGameStatus() {
             _gameConsoleView.DisplaySideWindowInformation();
 
-            // TODO implement this for all entities
-            _player.HealthRegen();
+            CheckLocation(_player);
 
+            // TODO implement this for all entities
+            //_player.HealthRegen();
+
+        }
+
+        private void CheckLocation(Entity entity) {
+            foreach (Npc npc in _world.Npcs) {
+                if (npc.xPos == entity.xPos)
+                    if (npc.yPos == entity.yPos)
+                        if (npc.Encounter(entity) == NpcActions.Attack) {
+                            _inBattle = true;
+                            _gameConsoleView.DisplayBattleScreen(npc);
+                            break;
+                        }
+
+            }
         }
 
         #endregion

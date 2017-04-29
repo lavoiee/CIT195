@@ -26,6 +26,7 @@ namespace FinalProject {
         // Developer Actions
         ListLocations,
         ListObjects,
+        ListNpcs,
 
         // Player actions
         LookAround,

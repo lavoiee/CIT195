@@ -22,6 +22,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -46,32 +47,35 @@
     <Compile Include="Assets\ActiveMenu.cs" />
     <Compile Include="Assets\Animations.cs" />
     <Compile Include="Assets\InteractiveMenu.cs" />
+    <Compile Include="Model\Characters\Relationship.cs" />
+    <Compile Include="Assets\NPCs\WorldNpcs.cs" />
     <Compile Include="Assets\Text.cs" />
-    <Compile Include="Assets\WorldObjectsGameObjects.cs" />
-    <Compile Include="Assets\WorldObjectsLocations.cs" />
+    <Compile Include="Assets\Objects\WorldObjectsGameObjects.cs" />
+    <Compile Include="Assets\Objects\WorldObjectsLocations.cs" />
+    <Compile Include="IBattle.cs" />
     <Compile Include="ISpeak.cs" />
     <Compile Include="Model\Enums\EnvironmentItemType.cs" />
+    <Compile Include="Model\Enums\NpcActions.cs" />
     <Compile Include="Model\Objects\CollectibleObject.cs" />
     <Compile Include="Model\Enums\CollectibleObjectType.cs" />
     <Compile Include="Model\Enums\ItemType.cs" />
     <Compile Include="Model\Objects\EnvironmentObject.cs" />
     <Compile Include="Model\Objects\GameObject.cs" />
-    <Compile Include="Model\Npc.cs" />
+    <Compile Include="Model\Characters\Npc.cs" />
     <Compile Include="Model\Objects\WorldObject.cs" />
     <Compile Include="Utilities\ConsoleUtilities\ConsoleLayout.cs" />
     <Compile Include="Utilities\ConsoleUtilities\ConsoleTheme.cs" />
     <Compile Include="Utilities\ConsoleUtilities\ConsoleWindowControl.cs" />
     <Compile Include="Utilities\ConsoleUtilities\ConsoleWindowHelper.cs" />
     <Compile Include="Controller\Controller.cs" />
-    <Compile Include="Model\NoiseMap.cs" />
+    <Compile Include="Model\World\NoiseMap.cs" />
     <Compile Include="Model\Enums\MenuOptions.cs" />
-    <Compile Include="Model\Entity.cs" />
-    <Compile Include="Model\Human.cs" />
-    <Compile Include="Model\Location.cs" />
+    <Compile Include="Model\Characters\Entity.cs" />
+    <Compile Include="Model\World\Location.cs" />
     <Compile Include="Model\Menu.cs" />
-    <Compile Include="Model\Player.cs" />
+    <Compile Include="Model\Characters\Player.cs" />
     <Compile Include="Model\PlayerAction.cs" />
-    <Compile Include="Model\World.cs" />
+    <Compile Include="Model\World\World.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utilities\MapUtilities\MapWindowControl.cs" />

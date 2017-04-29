@@ -287,8 +287,8 @@ namespace FinalProject {
             /// Remove the object from inventory and set the location to the current value
             _player.Inventory.Remove(droppedObject);
             droppedObject.Owner = null;
-            droppedObject.xPos = _player.PosX;
-            droppedObject.yPos = _player.PosY;
+            droppedObject.xPos = _player.xPos;
+            droppedObject.yPos = _player.yPos;
         }
 
         // TODO This sucks, fix it
@@ -412,7 +412,7 @@ namespace FinalProject {
 
         public void DisplayLocationInfo(int topRow) {
             // Draw location info
-            Location currentLocation = _world.GetLocationByCoords(_player.PosX, _player.PosY);
+            Location currentLocation = _world.GetLocationByCoords(_player.xPos, _player.yPos);
 
             Console.SetCursorPosition(ConsoleLayout.SideWindowPositionLeft + 2, topRow += 2);
             Console.Write(ConsoleWindowHelper.Center(new string('-', ConsoleLayout.SideWindowWidth - 4), ConsoleLayout.SideWindowWidth - 4));
@@ -421,7 +421,7 @@ namespace FinalProject {
             Console.SetCursorPosition(ConsoleLayout.SideWindowPositionLeft + 2, topRow += 2);
             Console.Write(ConsoleWindowHelper.Center($"({currentLocation.xCoord}, {currentLocation.yCoord})", ConsoleLayout.SideWindowWidth - 4));
             Console.SetCursorPosition(ConsoleLayout.SideWindowPositionLeft + 2, topRow += 4);
-            List<CollectibleObject> items = _world.GetCollectableObjectsByLocation(_player.PosX, _player.PosY);
+            List<CollectibleObject> items = _world.GetCollectableObjectsByLocation(_player.xPos, _player.yPos);
             bool valid = false;
             foreach (CollectibleObject item in items) {
                 if (item.Owner == null)
@@ -482,7 +482,7 @@ namespace FinalProject {
 
         public void DisplayNearbyObjects() {
             foreach (CollectibleObject item in _world.GameObjects)
-                if (MapWindowControl.GetDistance(item.xPos, item.yPos, _player.PosX, _player.PosY) < 20 && item.Owner == null) {
+                if (MapWindowControl.GetDistance(item.xPos, item.yPos, _player.xPos, _player.yPos) < 20 && item.Owner == null) {
                     int[] tempPos = WorldPosToScreenPos(item.xPos, item.yPos);
                     Console.SetCursorPosition(tempPos[0], tempPos[1]);
                     tempPos = WorldPosToMapDrawPos(item.xPos, item.yPos);
@@ -493,7 +493,7 @@ namespace FinalProject {
 
         public void DisplayNearbyLocations() {
             foreach (Location location in _world.Locations)
-                if (MapWindowControl.GetDistance(location.xCoord, location.yCoord, _player.PosX, _player.PosY) < 20 && location.Generic == false) {
+                if (MapWindowControl.GetDistance(location.xCoord, location.yCoord, _player.xPos, _player.yPos) < 20 && location.Generic == false) {
                     int[] tempPos = WorldPosToScreenPos(location.xCoord, location.yCoord);
                     Console.SetCursorPosition(tempPos[0], tempPos[1]);
                     tempPos = WorldPosToMapDrawPos(location.xCoord, location.yCoord);
@@ -504,16 +504,16 @@ namespace FinalProject {
 
         public int[] WorldPosToScreenPos(int x, int y) {
             int[] screenPos = new int[2];
-            screenPos[0] = MapWindowControl.WindowLeft + MapWindowControl.WindowWidth / 2 - (_player.PosX - x);
-            screenPos[1] = MapWindowControl.WindowTop + MapWindowControl.WindowHeight / 2 + (_player.PosY - y);
+            screenPos[0] = MapWindowControl.WindowLeft + MapWindowControl.WindowWidth / 2 - (_player.xPos - x);
+            screenPos[1] = MapWindowControl.WindowTop + MapWindowControl.WindowHeight / 2 + (_player.yPos - y);
 
             return screenPos;
         }
 
         public int[] WorldPosToMapDrawPos(int x, int y) {
             int[] screenPos = new int[2];
-            screenPos[0] = MapWindowControl.WindowWidth / 2 - (_player.PosX - x);
-            screenPos[1] = MapWindowControl.WindowHeight / 2 + (_player.PosY - y);
+            screenPos[0] = MapWindowControl.WindowWidth / 2 - (_player.xPos - x);
+            screenPos[1] = MapWindowControl.WindowHeight / 2 + (_player.yPos - y);
 
             return screenPos;
         }
@@ -557,9 +557,9 @@ namespace FinalProject {
                 moveY = 0;
             }
             int[] pos = MapWindowControl.Move(moveX, moveY, zoom);
-            _player.PosX = pos[0];
-            _player.PosY = pos[1];
-            _world.GetLocationByCoords(_player.PosX, _player.PosY).Explored = true;
+            _player.xPos = pos[0];
+            _player.yPos = pos[1];
+            _world.GetLocationByCoords(_player.xPos, _player.yPos).Explored = true;
             return true;
         }
 
@@ -836,6 +836,10 @@ namespace FinalProject {
 
         #region ----- display responses to menu action choices -----
 
+        public void DisplayBattleScreen(Npc npc) {
+            DisplayGamePlayScreen("Battle", Text.Battle(npc), ActiveMenu.BattleMenu);
+        }
+
         public void DisplayPlayerInfo() {
             DisplayGamePlayScreen("Player Information", Text.PlayerInfo(_player), ActiveMenu.FullMenu);
         }
@@ -1015,7 +1019,7 @@ namespace FinalProject {
 
         public void DisplayCurrentLocationInfo() {
 
-            Location currentLocation = _world.GetLocationByCoords(_player.PosX, _player.PosY);
+            Location currentLocation = _world.GetLocationByCoords(_player.xPos, _player.yPos);
 
             DisplayGamePlayScreen("Location Information", Text.CurrentLocationInfo(currentLocation), ActiveMenu.FullMenu);
             _player.Experience += currentLocation.ExperiencePoints;
@@ -1025,7 +1029,7 @@ namespace FinalProject {
             Console.ForegroundColor = ConsoleColor.White;
 
             Console.SetCursorPosition(ConsoleLayout.MainBoxPositionLeft + ConsoleLayout.MainBoxWidth / 2 - 45, ConsoleLayout.MainBoxPositionTop + 2);
-            if (_world.GetGameObjectsByLocation(_player.PosX,_player.PosY).Count == 0) {
+            if (_world.GetGameObjectsByLocation(_player.xPos,_player.yPos).Count == 0) {
                 Console.Write("There are no items here");
             } else {
                 Console.Write("Press <Q> to look at items");
@@ -1038,7 +1042,7 @@ namespace FinalProject {
             bool validGameObjectId = false;
 
             // Get a list of game objects in the current location
-            List<GameObject> gameObjectsInLocation = _world.GetGameObjectsByLocation(_player.PosX, _player.PosY);
+            List<GameObject> gameObjectsInLocation = _world.GetGameObjectsByLocation(_player.xPos, _player.yPos);
 
             if (gameObjectsInLocation.Count > 0) {
                 DisplayGamePlayScreen("Look at an object", Text.ListGameObjects(gameObjectsInLocation), ActiveMenu.FullMenu);
@@ -1048,7 +1052,7 @@ namespace FinalProject {
                     GetInteger($"Enter the ID of the object you wish to look at:", out gameObjectId);
 
                     // Validate int as a valid game object id and in current location
-                    if (_world.IsValidGameObjectByLocationCoord(gameObjectId, _player.PosX, _player.PosY)) {
+                    if (_world.IsValidGameObjectByLocationCoord(gameObjectId, _player.xPos, _player.yPos)) {
                         validGameObjectId = true;
                     } else {
                         ClearInputBox();
@@ -1064,9 +1068,11 @@ namespace FinalProject {
         public void DisplayListOfAllGameObjects() {
             DisplayGamePlayScreen("List: Items", Text.ListGameObjects(_world.GameObjects), ActiveMenu.DevMenu);
         }
-
         public void DisplayListOfAllLocations() {
             DisplayGamePlayScreen("List: Locations", Text.ListAllLocations(_world.Locations), ActiveMenu.DevMenu);
+        }
+        public void DisplayListOfAllNpcs() {
+            DisplayGamePlayScreen("List: Npcs", Text.ListAllNpcs(_world.Npcs,_player), ActiveMenu.DevMenu);
         }
 
         public void DisplayLookAt() {
@@ -1086,7 +1092,7 @@ namespace FinalProject {
         public void DisplayLookAround() {
 
             // Get a list of game objects in the current location
-            List<GameObject> gameObjectsInLocation = _world.GetGameObjectsByLocation(_player.PosX, _player.PosY);
+            List<GameObject> gameObjectsInLocation = _world.GetGameObjectsByLocation(_player.xPos, _player.yPos);
             List<CollectibleObject> CollectibleObjectsInLocation = new List<CollectibleObject>();
             // Remove nonCollectible items
             foreach (GameObject item in gameObjectsInLocation) {

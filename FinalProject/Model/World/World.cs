@@ -16,6 +16,7 @@ namespace FinalProject {
         //
         private List<Location> _locations;
         private List<GameObject> _gameObjects;
+        private List<Npc> _npcs;
         System.Random prng = new Random(MapWindowControl.seed);
 
 
@@ -27,6 +28,11 @@ namespace FinalProject {
         public List<GameObject> GameObjects {
             get { return _gameObjects; }
             set { _gameObjects = value; }
+        }
+
+        public List<Npc> Npcs {
+            get { return _npcs; }
+            set { _npcs = value; }
         }
 
         #endregion
@@ -53,12 +59,13 @@ namespace FinalProject {
         private void IntializeWorld() {
             _locations = WorldObjects.Locations as List<Location>;
             _gameObjects = WorldObjects.Objects as List<GameObject>;
+            _npcs = WorldNpcs.Npcs as List<Npc>;
         }
 
         #endregion
 
         #region ***** define methods to return game element objects and information *****
-
+        #region Handle Locations
         /// <summary>
         /// determine if a location is accessible to the player
         /// </summary>
@@ -112,7 +119,8 @@ namespace FinalProject {
             Locations.Add(location);
             return location;
         }
-
+        #endregion
+        #region Handle GameObjects
         //
         // 
         //
@@ -202,6 +210,61 @@ namespace FinalProject {
 
             return gameObjectToReturn;
         }
+        #endregion
+
+        #region Handle NPCs
+
+        public Npc GetNpcById(int id) {
+            Npc npcToReturn = null;
+
+            // Run through the game object list and grab the correct one
+            foreach (Npc npc in _npcs) {
+                if (npc.ID == id) {
+                    npcToReturn = npc;
+                }
+            }
+
+            // Throw an exception if the object doesn't exist
+            if (npcToReturn == null) {
+                string feedbackMessage = $"The NPC ID: [{id}] does not exist in the current world.";
+                throw new ArgumentException(id.ToString(), feedbackMessage);
+            }
+
+            return npcToReturn;
+        }
+
+        public List<Npc> GetNpcsByLocation(int xPos, int yPos) {
+            List<Npc> npcs = new List<Npc>();
+
+            // Iterate through the game object list and grab all that are in the current location
+            foreach (Npc npc in _npcs) {
+                if (npc is CollectibleObject)
+                    if (npc.yPos == yPos)
+                        if (npc.xPos == xPos) {
+                            npcs.Add(npc as Npc);
+                        }
+            }
+            return npcs;
+        }
+
+        public bool IsValidNpcByLocationCoord(int npcId, int xPos, int yPos) {
+            List<int> npcIds = new List<int>();
+
+            // create a list of game object IDs in given location
+            foreach (Npc npc in _npcs) {
+                if (npc.yPos == yPos)
+                    if (npc.xPos == xPos)
+                        npcIds.Add(npc.ID);
+            }
+
+            // Return whether the object exists at the location
+            if (npcIds.Contains(npcId))
+                return true;
+            else
+                return false;
+        }
+
+        #endregion
 
         #endregion
     }

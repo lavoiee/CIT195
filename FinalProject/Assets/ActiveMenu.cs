@@ -57,7 +57,20 @@ namespace FinalProject {
             MenuChoices = new Dictionary<int, MenuOptions>() {
                 { 1, MenuOptions.Back },
                 { 2, MenuOptions.ListLocations },
-                { 3, MenuOptions.ListObjects }
+                { 3, MenuOptions.ListObjects },
+                { 4, MenuOptions.ListNpcs }
+            }
+        };
+
+        public static Menu BattleMenu = new Menu() {
+            MenuName = "",
+            MenuTitle = "FIGHT!",
+            MenuChoices = new Dictionary<int, MenuOptions>() {
+                { 1, MenuOptions.WorldMap },
+                { 2, MenuOptions.Explore },
+                { 3, MenuOptions.Character },
+                { 4, MenuOptions.Inventory },
+                { 5, MenuOptions.Settings }
             }
         };
     }

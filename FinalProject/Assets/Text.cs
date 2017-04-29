@@ -190,6 +190,16 @@ namespace FinalProject {
 
         #endregion
 
+        #region Battle
+
+        public static string Battle(Npc npc) {
+            string messageBoxText = $"Your opponent charges at you shouting, \n \t \t {npc.Battlecry}";
+
+            return messageBoxText;
+        }
+
+        #endregion
+
         #region PLAYER ACTIONS
 
         public static string LookAt(GameObject gameObject) {
@@ -342,7 +352,7 @@ namespace FinalProject {
                         $"{gameObject.ID}".PadRight(10) +
                         $"{gameObject.Name}".PadRight(30);
                     if (gameObject.Owner != null) {
-                        gameObjectRows += $"{gameObject.Owner.PosX}, {gameObject.Owner.PosY}".PadRight(30) +
+                        gameObjectRows += $"{gameObject.Owner.xPos}, {gameObject.Owner.yPos}".PadRight(30) +
                         $"{gameObject.Owner.Name}".PadRight(30);
                     } else {
                         gameObjectRows += $"{gameObject.xPos}, {gameObject.yPos}".PadRight(30) +
@@ -381,6 +391,37 @@ namespace FinalProject {
             }
 
             messageBoxText += gameObjectRows;
+
+            return messageBoxText;
+        }
+
+        public static string ListAllNpcs(IEnumerable<Npc> npcs, Player player) {
+            // Display table name and column headers
+            string messageBoxText =
+                "Npcs\n" + "\n \n" +
+
+                //TODO add met property in NPC
+
+                // Display table header
+                "Name".PadRight(30) +
+                "Coordinates".PadRight(30) +
+                "Encountered".PadRight(30) + "\n" +
+                "----------------------".PadRight(30) +
+                "----------------------".PadRight(30) +
+                "----------------------".PadRight(30) + 
+                "\n";
+
+            // Display all collectible objects in rows
+            string npcRows = null;
+            foreach (Npc npc in npcs) {
+                npcRows +=
+                    $"{npc.Name}".PadRight(30) +
+                    $"{npc.xPos}, {npc.yPos}".PadRight(30) +
+                    $"{npc.HasMet(player).ToString()}".PadRight(30) +
+                    Environment.NewLine;
+            }
+
+            messageBoxText += npcRows;
 
             return messageBoxText;
         }

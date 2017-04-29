@@ -9,8 +9,7 @@ namespace FinalProject {
     /// A partial class to hold all GameObject objects in the game world
     /// </summary>
     public static partial class WorldObjects {
-        public static IEnumerable<GameObject> Objects = new List<GameObject>()
-        {
+        public static IEnumerable<GameObject> Objects = new List<GameObject>() {
             new CollectibleObject
             {
                 ID = 1,
