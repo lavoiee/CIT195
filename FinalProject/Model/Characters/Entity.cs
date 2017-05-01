@@ -41,6 +41,7 @@ namespace FinalProject {
 
         protected int _health;
         protected int _maxHealth;
+        protected bool _dead;
 
         protected SpeciesType _species;
 
@@ -178,6 +179,11 @@ namespace FinalProject {
             set { _possessing = value; }
         }
 
+        public bool Dead {
+            get { return _dead; }
+            set { _dead = value; }
+        }
+
         #endregion
 
         #region CONSTRUCTORS
@@ -221,21 +227,6 @@ namespace FinalProject {
                 _healthRegenTimer = _healthRegenTime;
             }
         }
-
-        public void TakeHit(int damage) {
-            // TODO Add dodge chance
-            TakeDamage(damage);
-        }
-
-        public void TakeDamage(int damage) {
-            Health -= damage;
-
-        }
-
-        public void Die() {
-
-        }
-
         #endregion
     }
 }

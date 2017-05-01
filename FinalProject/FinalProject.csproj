@@ -55,8 +55,9 @@
     <Compile Include="IBattle.cs" />
     <Compile Include="ISpeak.cs" />
     <Compile Include="Model\Enums\EnvironmentItemType.cs" />
+    <Compile Include="Model\Enums\Morphology.cs" />
     <Compile Include="Model\Enums\NpcActions.cs" />
-    <Compile Include="Model\Objects\CollectibleObject.cs" />
+    <Compile Include="Model\Characters\CollectibleObject.cs" />
     <Compile Include="Model\Enums\CollectibleObjectType.cs" />
     <Compile Include="Model\Enums\ItemType.cs" />
     <Compile Include="Model\Objects\EnvironmentObject.cs" />

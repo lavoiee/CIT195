@@ -19,6 +19,12 @@ namespace FinalProject {
         Settings,
         Exit,
 
+        // World Map
+        North,
+        East,
+        South,
+        West,
+
         // Settings
         Back,
         DevMenu,
@@ -32,6 +38,12 @@ namespace FinalProject {
         LookAround,
         LookAt,
         PickUp,
-        PutDown
+        PutDown,
+
+        // Battle actions
+        Attack,
+        Defend,
+        Magic,
+        RunAway
     }
 }

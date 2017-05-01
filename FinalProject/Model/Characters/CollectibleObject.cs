@@ -18,5 +18,6 @@ namespace FinalProject {
         public Entity Owner { get; set; }
         public bool IsUseable { get; set; }
         public int HealingValue { get; set; }
+        public int AttackPower { get; set; }
     }
 }

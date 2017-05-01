@@ -5,9 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace FinalProject {
-    interface IBattle {
-
-        int GetAttack();
-
+    public enum MorphologyType {
+        Humanoid,
+        Beast
     }
 }

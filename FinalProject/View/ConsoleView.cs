@@ -321,19 +321,7 @@ namespace FinalProject {
             }
         }
 
-        /// <summary>
-        /// Draw the input box on the game screen
-        /// </summary>
-        public void DisplayInputBox() {
-            Console.BackgroundColor = ConsoleTheme.InputBoxBackgroundColor;
-            Console.ForegroundColor = ConsoleTheme.InputBoxBorderColor;
 
-            ConsoleWindowHelper.DisplayBoxOutline(
-                ConsoleLayout.InputBoxPositionTop,
-                ConsoleLayout.InputBoxPositionLeft,
-                ConsoleLayout.InputBoxWidth,
-                ConsoleLayout.InputBoxHeight);
-        }
 
         /// <summary>
         /// display the prompt in the input box of the game screen
@@ -446,7 +434,6 @@ namespace FinalProject {
         }
 
         public void DisplayWorldMap(bool zooming) {
-            bool drawing = true;
             DisplayGamePlayScreen("World Map", "", ActiveMenu.FullMenu);
             MapWindowControl.Move(0, 0, 0);
             MapWindowControl.DrawScreen();
@@ -460,12 +447,14 @@ namespace FinalProject {
                     zoom -= 1;
                 }
             }
-            while (drawing) {
-                DrawPlayerAndItems();
-                drawing = MovePlayer();
-                MapWindowControl.DrawScreen();
-                DrawPlayerAndItems();
-            }
+            UpdateWorldMap(ConsoleKey.NoName);
+        }
+
+        public void UpdateWorldMap(ConsoleKey passthrough) {
+            DrawPlayerAndItems();
+            MovePlayer(passthrough);
+            MapWindowControl.DrawScreen();
+            DrawPlayerAndItems();
         }
 
         public void DrawPlayerAndItems() {
@@ -518,10 +507,7 @@ namespace FinalProject {
             return screenPos;
         }
 
-        public bool MovePlayer() {
-            _player.HealthRegen();
-            ConsoleKey keyPressed = Console.ReadKey().Key;
-
+        public void MovePlayer(ConsoleKey keyPressed) {
             int moveX = 0;
             int moveY = 0;
             int zoom = 0;
@@ -546,9 +532,6 @@ namespace FinalProject {
                     zoom = 1;
                     break;
                 default:
-                    if (SetMenuEscape(keyPressed)) {
-                        return false;
-                    }
                     break;
             }
             int terrainType = (int)MapWindowControl.Map.Map[MapWindowControl.WindowWidth / 2 + moveX, MapWindowControl.WindowHeight / 2 - moveY];
@@ -560,7 +543,6 @@ namespace FinalProject {
             _player.xPos = pos[0];
             _player.yPos = pos[1];
             _world.GetLocationByCoords(_player.xPos, _player.yPos).Explored = true;
-            return true;
         }
 
         #endregion
@@ -601,17 +583,6 @@ namespace FinalProject {
         public bool GetInteger(string key, out int integerChoice) {
             integerChoice = -1;
             return GetInteger(key, 0, 0, out integerChoice);
-        }
-
-        /// <summary>
-        /// get a character species value from the user
-        /// </summary>
-        /// <returns>character species value</returns>
-        public Player.SpeciesType GetSpecies() {
-            Player.SpeciesType speciesType;
-            Enum.TryParse<Player.SpeciesType>(Console.ReadLine(), out speciesType);
-
-            return speciesType;
         }
 
         /// <summary>
@@ -772,6 +743,17 @@ namespace FinalProject {
                     if (keyPressedInfo.Key == ConsoleKey.Q)
                         chosenOption = MenuOptions.LookAround;
                 }
+                if (_currentMenuChoice == MenuOptions.WorldMap) {
+                    if (keyPressedInfo.Key == ConsoleKey.W)
+                        chosenOption = MenuOptions.North;
+                    if (keyPressedInfo.Key == ConsoleKey.D)
+                        chosenOption = MenuOptions.East;
+                    if (keyPressedInfo.Key == ConsoleKey.S)
+                        chosenOption = MenuOptions.South;
+                    if (keyPressedInfo.Key == ConsoleKey.A)
+                        chosenOption = MenuOptions.West;
+                }
+
             }
 
             //Debug(keyPressedInfo.Key.ToString() + ": " + toParse + ": " + keyPressed.ToString() + ": " + chosenOption.ToString());
@@ -837,7 +819,8 @@ namespace FinalProject {
         #region ----- display responses to menu action choices -----
 
         public void DisplayBattleScreen(Npc npc) {
-            DisplayGamePlayScreen("Battle", Text.Battle(npc), ActiveMenu.BattleMenu);
+            DisplayGamePlayScreen($"Enounter: {npc.Name}", Text.Battle(npc), ActiveMenu.BattleMenu);
+
         }
 
         public void DisplayPlayerInfo() {
@@ -873,12 +856,6 @@ namespace FinalProject {
                     key++;
                 }
 
-                Console.SetCursorPosition(ConsoleLayout.MainBoxPositionLeft + ConsoleLayout.MainBoxWidth / 2 - 45, ConsoleLayout.MainBoxPositionTop + 2);
-                if (isPlayerInventory)
-                    Console.Write("Press <Q> to drop item");
-                else
-                    Console.Write("Press <Q> to pick up item");
-
                 Console.SetCursorPosition(ConsoleLayout.MainBoxPositionLeft + ConsoleLayout.MainBoxWidth / 2 - 48, ConsoleLayout.MainBoxPositionTop + 5);
                 Console.Write("Item name".PadRight(30) + "Description".PadRight(59) + "Value".PadRight(10));
                 Console.SetCursorPosition(ConsoleLayout.MainBoxPositionLeft + ConsoleLayout.MainBoxWidth / 2 - 48, ConsoleLayout.MainBoxPositionTop + 6);
@@ -887,8 +864,22 @@ namespace FinalProject {
                 topRow = ConsoleLayout.MainBoxPositionTop + 6;
                 foreach (KeyValuePair<int, CollectibleObject> item in inventoryToDisplay) {
 
-                    Console.SetCursorPosition(ConsoleLayout.MainBoxPositionLeft + ConsoleLayout.MainBoxWidth / 2 + 25, ConsoleLayout.MainBoxPositionTop + 2);
                     if (item.Key == currentSelection) {
+
+                        Console.SetCursorPosition(ConsoleLayout.MainBoxPositionLeft + ConsoleLayout.MainBoxWidth / 2 - 45, ConsoleLayout.MainBoxPositionTop + 2);
+                        if (isPlayerInventory) {
+                            if (item.Value.CanDrop)
+                                Console.Write("Press <Q> to drop item");
+                            else
+                                Console.Write("                         ");
+                        } else {
+                            if (item.Value.CanPickup)
+                                Console.Write("Press <Q> to pick up item");
+                            else
+                                Console.Write("                         ");
+                        }
+
+                        Console.SetCursorPosition(ConsoleLayout.MainBoxPositionLeft + ConsoleLayout.MainBoxWidth / 2 + 25, ConsoleLayout.MainBoxPositionTop + 2);
                         if (item.Value.IsUseable) {
                             if (item.Value.Type == ItemType.Consumable)
                                 Console.Write("Press <E> to eat item");
@@ -1105,6 +1096,99 @@ namespace FinalProject {
                 DisplayInventory(CollectibleObjectsInLocation, false);
 //                DisplayGamePlayScreen("Look at an object", Text.ListGameObjects(gameObjectsInLocation), ActiveMenu.FullMenu);
             }
+        }
+
+        #endregion
+
+        #region Battle
+
+        public string DisplayBattleMenu(Menu menu, string heading) {
+            //
+            // display menu choices
+            //
+            int topRow;
+            int currentSelection = 1;
+            int[] info = new int[menu.InteractiveMenuChoices.Count];
+            Console.CursorVisible = false;
+            
+            Console.BackgroundColor = ConsoleColor.Black;
+            Console.ForegroundColor = ConsoleColor.White;
+
+            while (true) {
+                topRow = ConsoleLayout.MainBoxPositionTop + 14;
+                foreach (KeyValuePair<int, string> menuChoice in menu.InteractiveMenuChoices) {
+                    string indicator = "   ";
+                    if (menuChoice.Key == currentSelection)
+                        indicator = " - ";
+                    string formattedMenuChoice = indicator + ConsoleWindowHelper.ToLabelFormat(menuChoice.Value) + indicator;
+                    Console.SetCursorPosition(ConsoleLayout.MainBoxPositionLeft + ConsoleLayout.MainBoxWidth / 2 - 19, topRow += 2);
+                    Console.Write($"{formattedMenuChoice}");
+                    Console.SetCursorPosition(0,0);
+                }
+
+                ConsoleKeyInfo keyPressedInfo = Console.ReadKey();
+                ConsoleKey keyPressed = keyPressedInfo.Key;
+                if (keyPressed == ConsoleKey.Enter) {
+                    return menu.InteractiveMenuChoices[currentSelection];
+                }
+                if (keyPressed == ConsoleKey.DownArrow || keyPressed == ConsoleKey.S) {
+                    if (currentSelection < menu.InteractiveMenuChoices.Count)
+                        currentSelection += 1;
+                }
+                if (keyPressed == ConsoleKey.UpArrow || keyPressed == ConsoleKey.W) {
+                    if (currentSelection > 1)
+                        currentSelection -= 1;
+                }
+            }
+        }
+
+        public void DisplayResults(Npc npc) {
+
+            Console.Clear();
+
+            int damageTaken = npc.GetAttack();
+            int damageDealt = _player.GetAttack();
+
+            string message1;
+            string message2;
+            string message3 = " ";
+
+            if (damageTaken > 0) {
+                message1 = $"You took {damageTaken} points of damage";
+                _player.Health -= damageTaken;
+            } else {
+                message1 = $"{npc.Name} missed";
+            }
+            if (damageDealt > 0) {
+                npc.Health -= damageDealt;
+                message2 = $"You dealt {damageDealt} points of damage";
+                if (npc.Health <= 0) {
+                    message2 += ", killing the attacker";
+                    message3 = $"Experience gained: {(npc.Strength + npc.Dexterity).ToString()}";
+                    _player.Experience += (npc.Strength + npc.Dexterity);
+                    _world.Npcs.Remove(npc);
+                }
+            } else
+                message2 = $"You missed";
+
+            Console.SetCursorPosition(0, ConsoleLayout.MainBoxPositionTop + 12);
+            Console.Write(ConsoleWindowHelper.Center(message1, ConsoleLayout.WindowWidth));
+            Console.SetCursorPosition(0, ConsoleLayout.MainBoxPositionTop + 14);
+            Console.Write(ConsoleWindowHelper.Center(message2, ConsoleLayout.WindowWidth));
+            Console.SetCursorPosition(0, ConsoleLayout.MainBoxPositionTop + 16);
+            Console.Write(ConsoleWindowHelper.Center(message3, ConsoleLayout.WindowWidth));
+            Console.SetCursorPosition(0, ConsoleLayout.MainBoxPositionTop + 19);
+            Console.Write(ConsoleWindowHelper.Center("Press any key to continue", ConsoleLayout.WindowWidth));
+            Console.ReadKey();
+        }
+
+        public void DisplayWorldMapTutorial() {
+            Console.Clear();
+            Console.SetCursorPosition(0, ConsoleLayout.MainBoxPositionTop + 14);
+            Console.Write(ConsoleWindowHelper.Center("Use WASD to move", ConsoleLayout.WindowWidth));
+            Console.SetCursorPosition(0, ConsoleLayout.MainBoxPositionTop + 19);
+            Console.Write(ConsoleWindowHelper.Center("Press any key to continue", ConsoleLayout.WindowWidth));
+            Console.ReadKey();
         }
 
         #endregion

@@ -8,28 +8,13 @@ namespace FinalProject {
 
 
     //TODO Admin menu
-        // List all locations
-        // List all objects
         // ** Create/edit an object
         // ** Edit a location
 
 
-
 /*
-        Homework
 
-
-get max location? Add bounds?
-Manage game loop to handle inputs
-track visited locations
-add hasVisited method to entity class
-add health and status bar to the side menu
-
-        add forests
         add mazes
-
-partial classes - separate assets by types
-	text class - separate into story, menu, and gameplay
     
 */
     /// <summary>
@@ -47,8 +32,6 @@ partial classes - separate assets by types
         private List<Location> _locationsVisited;
 
         private bool _playingGame;
-        private bool _inBattle;
-        private Npc _opponent;
 
         #endregion
 
@@ -85,7 +68,8 @@ partial classes - separate assets by types
             AddItemToInventory(_world.GetGameObjectById(1) as CollectibleObject);
             AddItemToInventory(_world.GetGameObjectById(2) as CollectibleObject);
             AddItemToInventory(_world.GetGameObjectById(3) as CollectibleObject);
-            
+            AddItemToInventory(_world.GetGameObjectById(10) as CollectibleObject);
+
             Console.CursorVisible = false;
         }
 
@@ -165,15 +149,14 @@ partial classes - separate assets by types
                 }
                 back = false;
                 _gameConsoleView.MenuEscape = 0;
-                _gameConsoleView.CurrentMenuChoice = playerMenuChoice;
+                if (playerMenuChoice != MenuOptions.None)
+                    _gameConsoleView.CurrentMenuChoice = playerMenuChoice;
                 //
                 // choose an action based on the user's menu choice
                 //
                 switch (playerMenuChoice) {
                     case MenuOptions.None:
                         break;
-
-
 
                     // Main Menu
                     case MenuOptions.WorldMap:
@@ -194,6 +177,29 @@ partial classes - separate assets by types
 
                     case MenuOptions.Settings:
                         _gameConsoleView.DisplaySettings();
+                        break;
+
+
+
+                    // World Map
+                    case MenuOptions.North:
+                        _gameConsoleView.UpdateWorldMap(ConsoleKey.W);
+                        _gameConsoleView.CurrentMenuChoice = MenuOptions.WorldMap;
+                        break;
+
+                    case MenuOptions.East:
+                        _gameConsoleView.UpdateWorldMap(ConsoleKey.D);
+                        _gameConsoleView.CurrentMenuChoice = MenuOptions.WorldMap;
+                        break;
+
+                    case MenuOptions.South:
+                        _gameConsoleView.UpdateWorldMap(ConsoleKey.S);
+                        _gameConsoleView.CurrentMenuChoice = MenuOptions.WorldMap;
+                        break;
+
+                    case MenuOptions.West:
+                        _gameConsoleView.UpdateWorldMap(ConsoleKey.A);
+                        _gameConsoleView.CurrentMenuChoice = MenuOptions.WorldMap;
                         break;
 
 
@@ -242,7 +248,7 @@ partial classes - separate assets by types
             //
             // close the application
             //
-            Environment.Exit(1);
+            Outro();
         }
 
         /// <summary>
@@ -276,28 +282,63 @@ partial classes - separate assets by types
         }
 
         private void UpdateGameStatus() {
+            if (_player.Health <= 0) {
+                Outro();
+            }
             _gameConsoleView.DisplaySideWindowInformation();
 
-            CheckLocation(_player);
+            CheckLocation();
 
             // TODO implement this for all entities
-            //_player.HealthRegen();
+            _player.HealthRegen();
 
         }
 
-        private void CheckLocation(Entity entity) {
-            foreach (Npc npc in _world.Npcs) {
-                if (npc.xPos == entity.xPos)
-                    if (npc.yPos == entity.yPos)
-                        if (npc.Encounter(entity) == NpcActions.Attack) {
-                            _inBattle = true;
-                            _gameConsoleView.DisplayBattleScreen(npc);
-                            break;
-                        }
-
+        private void CheckLocation() {
+            List<Npc> localNpcs = _world.GetNpcsByLocation(_player.xPos, _player.yPos);
+            if (localNpcs.Count > 0) {
+                foreach (Npc npc in localNpcs) {
+                    Battle(npc);
+                }
+                if (_playingGame)
+                    _gameConsoleView.DisplayWorldMap();
             }
         }
 
+        private void Battle(Npc npc) {
+            while (npc.Health > 0 && _player.Health > 0) {
+                _gameConsoleView.DisplayBattleScreen(npc);
+                _gameConsoleView.DisplaySideWindowInformation();
+
+                if (_gameConsoleView.DisplayBattleMenu(InteractiveMenu.BattleOptions, npc.Name) != "Run Away") {
+                    _gameConsoleView.DisplayResults(npc);
+                    if (npc.Name == "Burned undead hound" && npc.Health <= 0)
+                        _gameConsoleView.DisplayWorldMapTutorial();
+                }
+                if (_player.Health <= 0 && _playingGame) {
+                    Console.Clear();
+                    Console.SetCursorPosition(0, ConsoleLayout.MainBoxPositionTop + 14);
+                    Console.Write(ConsoleWindowHelper.Center("You died", ConsoleLayout.WindowWidth));
+                    Console.SetCursorPosition(0, ConsoleLayout.MainBoxPositionTop + 17);
+                    Console.Write(ConsoleWindowHelper.Center("Press any key to continue", ConsoleLayout.WindowWidth));
+                    Console.ReadKey();
+                    _playingGame = false;
+                }
+            }
+
+        }
+
         #endregion
+
+        private void Outro() {
+            Console.BackgroundColor = ConsoleColor.Black;
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.SetCursorPosition(0, ConsoleLayout.MainBoxPositionTop + 14);
+            Console.Write(ConsoleWindowHelper.Center("Thanks for playing", ConsoleLayout.WindowWidth));
+            Console.SetCursorPosition(0, ConsoleLayout.MainBoxPositionTop + 17);
+            Console.Write(ConsoleWindowHelper.Center("Press any key to continue", ConsoleLayout.WindowWidth));
+            Console.ReadKey();
+            Environment.Exit(1);
+        }
     }
 }

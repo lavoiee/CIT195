@@ -238,7 +238,6 @@ namespace FinalProject {
 
             // Iterate through the game object list and grab all that are in the current location
             foreach (Npc npc in _npcs) {
-                if (npc is CollectibleObject)
                     if (npc.yPos == yPos)
                         if (npc.xPos == xPos) {
                             npcs.Add(npc as Npc);

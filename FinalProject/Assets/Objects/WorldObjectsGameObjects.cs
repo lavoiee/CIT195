@@ -16,7 +16,10 @@ namespace FinalProject {
                 Name = "Sharp stick",
                 Description = "It's brown and sticky.",
                 xPos = 1300,
-                yPos = 850
+                yPos = 850,
+                AttackPower = 1,
+                CanDrop = true,
+                CanPickup = true
             },
             new CollectibleObject
             {
@@ -27,7 +30,9 @@ namespace FinalProject {
                 yPos = 863,
                 IsUseable = true,
                 Type = ItemType.Consumable,
-                HealingValue = -5
+                HealingValue = -5,
+                CanDrop = true,
+                CanPickup = true
             },
         new CollectibleObject
             {
@@ -35,7 +40,9 @@ namespace FinalProject {
                 Name = "Cloak",
                 Description = "It has lot's of little pockets.",
                 xPos = 1300,
-                yPos = 850
+                yPos = 850,
+                CanDrop = true,
+                CanPickup = true
             },
         new CollectibleObject
             {
@@ -43,7 +50,9 @@ namespace FinalProject {
                 Name = "Book",
                 Description = "It's all spooky and stuff.",
                 xPos = 1332,
-                yPos = 867
+                yPos = 867,
+                CanDrop = false,
+                CanPickup = true
             },
         new CollectibleObject
             {
@@ -51,7 +60,10 @@ namespace FinalProject {
                 Name = "Dull Axe",
                 Description = "It has a great personality.",
                 xPos = 1370,
-                yPos = 860
+                yPos = 860,
+                AttackPower = 7,
+                CanDrop = true,
+                CanPickup = true
             },
         new CollectibleObject
             {
@@ -62,7 +74,9 @@ namespace FinalProject {
                 yPos = 835,
                 Type = ItemType.Consumable,
                 IsUseable = true,
-                HealingValue = 45
+                HealingValue = 45,
+                CanDrop = true,
+                CanPickup = true
             },
         new CollectibleObject
             {
@@ -73,7 +87,9 @@ namespace FinalProject {
                 yPos = 851,
                 Type = ItemType.Consumable,
                 IsUseable = true,
-                HealingValue = 5
+                HealingValue = 5,
+                CanDrop = true,
+                CanPickup = true
             },
         new CollectibleObject
             {
@@ -81,7 +97,9 @@ namespace FinalProject {
                 Name = "Hiking boots",
                 Description = "They stink.",
                 xPos = 1321,
-                yPos = 859
+                yPos = 859,
+                CanDrop = true,
+                CanPickup = true
             },
         new CollectibleObject
             {
@@ -89,7 +107,32 @@ namespace FinalProject {
                 Name = "Blacksmith hammer",
                 Description = "Iron... heads... it works for both.",
                 xPos = 1289,
-                yPos = 853
+                yPos = 853,
+                AttackPower = 5,
+                CanDrop = true,
+                CanPickup = true
+            },
+        new CollectibleObject
+            {
+                ID = 10,
+                Name = "Dagger",
+                Description = "",
+                xPos = 1332,
+                yPos = 866,
+                AttackPower = 3,
+                CanDrop = true,
+                CanPickup = true
+            },
+        new CollectibleObject
+            {
+                ID = 11,
+                Name = "GIANT TURBO SWORD McDEATH SLINGER!!!",
+                Description = "The blade echos with riffs of 80's hair metal.",
+                xPos = 1762,
+                yPos = 1201,
+                AttackPower = 10000000,
+                CanDrop = false,
+                CanPickup = true
             }
 };
     }

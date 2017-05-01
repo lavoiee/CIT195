@@ -8,7 +8,7 @@ namespace FinalProject {
     /// <summary>
     /// the character class the player uses in the game
     /// </summary>
-    public class Player : Entity {
+    public class Player : Entity, IBattle {
         #region ENUMERABLES
 
 
@@ -37,6 +37,13 @@ namespace FinalProject {
 
 
         #region METHODS
+
+        public int GetAttack() {
+            int hit = -1;
+            if (new Random().Next(1, 101) < Dexterity * 10)
+                hit = Strength;
+            return hit;
+        }
 
         #endregion
     }

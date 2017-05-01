@@ -88,7 +88,7 @@ namespace FinalProject {
                 "  of tearing wood.  The dog is free.  The baker drops into your field of vision without a throat.  The \n" +
                 "  other voices panic as the undead animal shrugs off their blows.  Your drunk father mumbles in his fitful \n" +
                 "  sleep.  A man swings his torch at the animal.  The scent of burning hair fills the room.  Father screams.  \n" +
-                "  You drag yourself out the back door as the walls begin to blister.";
+                "  You drag yourself out the back door as the walls begin to blister.  Darkness takes you.";
             return messageBoxText;
         }
 
@@ -193,7 +193,17 @@ namespace FinalProject {
         #region Battle
 
         public static string Battle(Npc npc) {
-            string messageBoxText = $"Your opponent charges at you shouting, \n \t \t {npc.Battlecry}";
+            string messageBoxText = "Something broke";
+
+            if (npc.Name == "Burned undead hound") {
+                messageBoxText = 
+                    $"Pain, once again, brings the world into focus.  The hound's teeth are sunk into the back of your neck. \n" +
+                    "You snatch the dagger from your belt and slash wildly.  The sudden motion rips the hound's teeth through\n" +
+                    "the flesh of your neck, freeing you.  You scramble to one knee with your dagger outstretched.";
+
+                return messageBoxText;
+            }
+            messageBoxText = $"Your opponent charges at you shouting, \n \n \t \t {npc.Battlecry}";
 
             return messageBoxText;
         }
